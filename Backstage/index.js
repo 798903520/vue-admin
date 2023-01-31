@@ -1,7 +1,9 @@
 const express = require('express')
-const app = express()
+const path = require("path");
+const app = express();
 app.use(express.urlencoded());//传递键值对
 app.use(express.json());//传递json
+app.use('/public',express.static(path.join(__dirname, './public')));//指定文件夹
 
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

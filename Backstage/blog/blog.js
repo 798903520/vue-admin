@@ -1,9 +1,28 @@
-const express = require('express')
+const express = require('express');
+const fs = require('fs');
 const connection = require("../sql.js");
 const router = express.Router();
+
 router.post('/addBlog', function (req, res) {
     // 直接返回对象
     console.log('name&psw',req.body);
+    let imgData = req.body.blobFile;
+    //过滤data:URL
+    let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+    let dataBuffer = new Buffer(base64Data, 'base64');
+    fs.writeFile("./public/img/image.png", dataBuffer, function(err) {
+        if(err){
+            res.send({
+                code:'100',
+                msg:err
+            })
+        }else{
+            res.send({
+                code:'200',
+                msg:'图片保存成功'
+            });
+        }
+    });
     // let connection = require('../sql.js')
     // connection.init();
     // connection.connect();

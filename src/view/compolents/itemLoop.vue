@@ -78,7 +78,7 @@ export default {
     loopStart(loopData,id='insid2'){
       let parents = document.getElementById('loopDiv');
       let _this = this;
-      console.log(parents.children.length)
+      // console.log(parents.children.length)
       if(parents.children.length<2){
         this.isLoop(loopData,id);
       }
@@ -94,7 +94,7 @@ export default {
           _this.loopStart(loopData,_this.nowDomId);
           return;
         }
-        console.log('top',insid1.offsetTop ,insid2.offsetTop )
+        // console.log('top',insid1.offsetTop ,insid2.offsetTop )
       },this.settings.step||50 );
     },
   },

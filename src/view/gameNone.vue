@@ -35,7 +35,7 @@
       :close-on-press-escape="false"
       :close-on-click-modal="false"
       :destroy-on-close="true"
-      width="900px"
+      width="50%"
       title="新增评论"
   >
     <div class="dayly">
@@ -57,7 +57,7 @@
           <div class="select" v-if="!blobFile">
             <el-button size="small" @click="selectImg">选择图片</el-button>
             <el-button size="small" @click="addImg">拍摄图片</el-button>
-            <span class="span">+</span>
+            <span class="span"><img src="http://localhost:3000/public/img/image.png" alt=""></span>
           </div>
         </div>
       </div>
@@ -91,24 +91,12 @@ export default {
     }
   },
   created() {
-    console.log(123,this.isPalindrome([3,9,20,null,null,15,7,1,2]))
+    // console.log(123,this.isPalindrome([3,9,20,null,null,15,7,1,2]))
   },
   methods:{
     //log
     logit(data){
       console.log('123',data);
-    },
-    isPalindrome(x) {
-      let le = x.length;
-      let now=0;
-      for(let c=0;;c++){
-        if(now < le){
-          now = now + Math.pow(2,c);
-          console.log(now,le)
-        }else{
-          return c;
-        }
-      }
     },
     //弹窗按钮
     addOne(data){
@@ -156,9 +144,9 @@ export default {
       let input=document.createElement('input');
       input.setAttribute('type', 'file');
       input.setAttribute('multiple', 'multiple');
-      input.accept="image/*"
+      input.accept="image/*";
       input.addEventListener('change',(e)=>{
-        toBase64(e.path[0].files[0]).then(res => {
+        toBase64(input.files[0]).then(res => {
           _this.blobFile = res;
           console.log(1,res)
         }).catch(res => {
