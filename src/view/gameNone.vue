@@ -57,7 +57,7 @@
           <div class="select" v-if="!blobFile">
             <el-button size="small" @click="selectImg">选择图片</el-button>
             <el-button size="small" @click="addImg">拍摄图片</el-button>
-            <span class="span"><img src="http://localhost:3000/public/img/image.png" alt=""></span>
+            <span class="span"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iI2QzZDNkMyIgY2xhc3M9ImJpIGJpLXBsdXMtY2lyY2xlIiB2aWV3Qm94PSIwIDAgMTYgMTYiIGlkPSJpY29uLXBsdXMtY2lyY2xlLTI5Ij48cGF0aCBkPSJNOCAxNUE3IDcgMCAxIDEgOCAxYTcgNyAwIDAgMSAwIDE0em0wIDFBOCA4IDAgMSAwIDggMGE4IDggMCAwIDAgMCAxNnoiPjwvcGF0aD48cGF0aCBkPSJNOCA0YS41LjUgMCAwIDEgLjUuNXYzaDNhLjUuNSAwIDAgMSAwIDFoLTN2M2EuNS41IDAgMCAxLTEgMHYtM2gtM2EuNS41IDAgMCAxIDAtMWgzdi0zQS41LjUgMCAwIDEgOCA0eiI+PC9wYXRoPjwvc3ZnPg==" alt=""></span>
           </div>
         </div>
       </div>
