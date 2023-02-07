@@ -13,7 +13,6 @@ router.post('/addBlog', function (req, res) {
     let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
     let dataBuffer = new Buffer.from(base64Data, 'base64');
     let id = utils.ramdomNum() + utils.nowTime();
-    console.log(id);
     fs.writeFile(`./public/img/${id}.png`, dataBuffer, function(err) {
         if(err){
             res.send({
@@ -21,32 +20,49 @@ router.post('/addBlog', function (req, res) {
                 msg:err
             })
         }else{
-            res.send({
-                code:'200',
-                msg:'图片保存成功'
+            let connection = require('../sql.js')
+            connection.init();
+            connection.connect();
+            let sql = `INSERT INTO blog_items values ('${id}','${req.body.name}','${req.body.content}','/public/img/${id}.png',NOW())`;
+            connection.query(sql).then(resbon => {
+                res.send({
+                    code:'200',
+                    msg:'发布成功'
+                });
+            }).catch((resbon) => {
+                res.send({
+                    code:'100',
+                    msg:resbon
+                });
             });
+            connection.close();
         }
     });
-    // let connection = require('../sql.js')
-    // connection.init();
-    // connection.connect();
-    // let sql = `select * from user where userName = '${req.body.name}'`;
-    // connection.query(sql).then(rsb => {
-    //     if(rsb.length == 0){
-    //         res.send({ code: '2300', token: 'zhangc', msg: '用户不存在!请联系管理员' });
-    //     }
-    //     let data = {...rsb[0]};
-    //     if(data.psw == req.body.psw){
-    //         res.send({ code: '200', token: 'zhangc', msg: '登录成功' });
-    //         return;
-    //     }else{
-    //         res.send({ code: '2300', token: 'zhangc', msg: '密码错误！' });
-    //     }
-    // }).catch(rsb => {
-    //     console.log('error', rsb);
-    //     res.send({ code: '2300', token: 'zhangc', msg: '后端错误，请联系管理员' });
-    //
-    // });
-    // connection.close();
+})
+router.post('/getBlog', function (req, res) {
+    // 直接返回对象
+    let queryData = req.body;
+    let connection = require('../sql.js')
+    connection.init();
+    connection.connect();
+    let sql = `SELECT * FROM blog_items order by id desc limit ${queryData.pageNum.length==0?'0':(queryData.pageNum-1)*queryData.pageSize},${queryData.pageSize};`;
+    let sql2 = `select count(*) as total from blog_items;`
+    // 查询
+    let p1 = connection.query(sql)
+    let p2 = connection.query(sql2);
+    Promise.all([p1,p2]).then((data)=>{
+        res.send({
+            code:'200',
+            data:data[0],
+            total:data[1][0].total,
+            msg:'查询成功'
+        })
+    }).catch(()=>{
+        res.send({
+            code:'100',
+            msg:"查询出错,请通知管理员"
+        });
+    });
+    connection.close();
 })
 module.exports = router

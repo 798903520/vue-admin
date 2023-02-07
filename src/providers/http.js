@@ -9,20 +9,20 @@ axios.defaults.baseURL = '/api/'
 var _token = sessionStorage.getItem('_token') || undefined;
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-    // 在发送请求之前做些什么
-    if (config.method == "get") {
+    console.log('config',config)
+    // 在发送请求之前做些什么  bug=1的时候,直接放行
+    if (config.method == "get"&&config.bug!=1) {
         if (config.params && config.params.token) {
             config.headers.authorization = config.params.token.replace('%20', ' ');
         }
-        delete config.params.token;
-    } else if (config.method == "post") {
+        config.params.token?'':delete config.params.token;
+    } else if (config.method == "post"&&config.bug!=1) {
 
         if (config.data && config.data.token) {
             console.log(config.url,config.data)
             config.headers.authorization = config.data.token.replace('%20', ' ');
-
         }
-        delete config.data.token;
+        config.data.token?'':delete config.data.token;
     }
     return config;  //添加这一行
 })

@@ -1,7 +1,24 @@
 <template>
 <div class="headBtn">
-  <el-button @click="addOne('A')">新增评论</el-button>
-  <itemLoop :settings="loopData" @clickData="logit">
+  <div class="left">
+    <div><el-button @click="addOne('A')">新增评论</el-button></div>
+    <div class="item_list">
+      <div v-for="item in blog_list" :key="item.id" class="blogItem">
+        <div class="head_name_time">
+          <img :src="baseUrl+item.imgPath" alt="">
+          <div class="name_time">
+            <span class="name">{{item.name}}</span>
+            <span>{{item.time}}</span>
+          </div>
+        </div>
+        <div class="content">{{item.content}}</div>
+        <div class="image">
+          <el-image :preview-src-list="[baseUrl+item.imgPath]" :src="baseUrl+item.imgPath"></el-image>
+        </div>
+      </div>
+    </div>
+  </div>
+  <itemLoop class="rightContent" :settings="loopData" @clickData="logit">
   </itemLoop>
 </div>
   <el-dialog
@@ -41,11 +58,11 @@
     <div class="dayly">
       <div class="data">
         <div class="label">名字:</div>
-        <el-input v-model="name"></el-input>
+        <el-input maxlength="200" show-word-limit v-model="name"></el-input>
       </div>
       <div class="data">
         <div class="label" style="align-self: self-start">内容:</div>
-        <el-input v-model="content" type="textarea"></el-input>
+        <el-input v-model="content" maxlength="200" show-word-limit type="textarea"></el-input>
       </div>
       <div class="data">
         <div class="label" style="align-self: self-start">图片:</div>
@@ -71,7 +88,7 @@
 
 <script>
 import {toBase64} from '../js/jsFun.js'
-import {addBlog} from "../api/index.js"
+import {addBlog,getBlog} from "../api/index.js"
 import itemLoop from "./compolents/itemLoop.vue";
 export default {
   name: "blog",
@@ -80,6 +97,12 @@ export default {
   },
   data(){
     return {
+      baseUrl:import.meta.env.VITE_APP_BASE_API,
+      blog_list:[],
+
+      pageNum: '1',
+      pageSize:'10',
+
       addDia:false,
       addDia2:false,
     //  存储流
@@ -91,9 +114,21 @@ export default {
     }
   },
   created() {
-    // console.log(123,this.isPalindrome([3,9,20,null,null,15,7,1,2]))
+    this.getBlogData();
   },
   methods:{
+    getBlogData(){
+      let Data = {
+        pageSize:this.pageSize,
+        pageNum: this.pageNum
+      }
+      getBlog(Data).then(res => {
+        if(res.code == 200){
+          this.blog_list = res.data;
+          this.$forceUpdate();
+        }
+      });
+    },
     //log
     logit(data){
       console.log('123',data);
@@ -102,6 +137,9 @@ export default {
     addOne(data){
       switch (data){
         case 'A':
+          this.name = '';
+          this.content = '';
+          this.blobFile = null;
           break;
         case 'T':
           //确定新增
@@ -125,18 +163,21 @@ export default {
         this.$notify.error('图片不能为空');
         return;
       }
-      // let data = new FormData();
-      // data.append('name',this.name);
-      // data.append('content',this.content);
-      // data.append('blobFile',this.blobFile);
+      let formData = new FormData();
+      formData.append('name',this.name);
+      formData.append('content',this.content);
+      formData.append('blobFile',this.blobFile);
       let data = {
         name:this.name,
         content:this.content,
         blobFile:this.blobFile,
       };
-      console.log('data',this.name,this.content,this.blobFile)
       addBlog(data).then(res => {
         console.log(res)
+        if(res.code == 200){
+          this.$notify.success('新增成功');
+          this.getBlogData();
+        }
       });
     },
     selectImg(){
@@ -213,10 +254,10 @@ export default {
 }
 </script>
 <script setup>
-const loopData = {
+var loopData = {
   style:{
-    height:"300px",
-    width:'100%',
+    height:"100%",
+    width:'300px',
     border:'1px solid black',
   },
   step:500,//时长
@@ -252,11 +293,151 @@ const loopData = {
       type:'c',
       num:'6'
     },
+    {
+      name:'z',
+      type:'c',
+      num:'7'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'8'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'9'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'10'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'11'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'12'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'13'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'14'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'15'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'16'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'17'
+    },
+    {
+      name:'z',
+      type:'c',
+      num:'18'
+    },
   ]
 };
 </script>
 
 <style scoped lang="less">
+.headBtn{
+  height: 100%;
+  display: flex;
+  .rightContent{
+  }
+  .left{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    .item_list::-webkit-scrollbar {
+      width: 6px;
+      border: 1px solid #c3c3c3;
+    }
+    .item_list::-webkit-scrollbar-thumb {
+      background-color: #c3c3c3;
+    }
+    .item_list{
+      margin-top: 20px;
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      overflow-y: auto;
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-right: 20px;
+      .blogItem:nth-child(2n-1){
+        margin-right:calc(2% - 4px) ;
+      }
+      .blogItem:nth-child(1){
+        margin-top: 0;
+      }
+      .blogItem:nth-child(2){
+        margin-top: 0;
+      }
+      .blogItem{
+        width: 49% ;
+        margin-top: calc(2% - 4px);
+        box-shadow: 0 0 3px 3px rgba(0,0,0,0.06);
+        border-radius: 6px;
+        height: auto ;
+        .head_name_time{
+          height: 70px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          img{
+            height: 52px;
+            width: 52px;
+            margin: 8px;
+            border-radius: 50%;
+            box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.1);
+          }
+          .name_time{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #989898;
+            height: 50%;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.1);
+            .name{
+              font-size: 16px;
+              color: #4e4e4e;
+            }
+          }
+        }
+        .content{
+          padding-left: 18px ;
+          color: #5d5d5d;
+          margin: 20px 0;
+        }
+        .image{
+          text-align: center;
+        }
+      }
+    }
+  }
+}
 .video{
   .getPhotoArea{
     width: 100%;
@@ -350,6 +531,18 @@ const loopData = {
     .select:hover .span{
       display: none;
     }
+  }
+}
+@media only screen and (max-width: 1400px){
+  .blogItem{
+    width: 100% !important;
+    margin-top: 20px;
+  }
+  .blogItem:nth-child(2n-1){
+    margin-right: 0 !important;
+  }
+  .blogItem:nth-child(2){
+    margin-top: 20px !important;
   }
 }
 </style>

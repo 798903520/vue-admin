@@ -49,6 +49,24 @@ const router = createRouter({
                         }
                     ]
                 },
+                {
+                    path:'/bug',
+                    name:'爬虫',
+                    redirect: '/bug/bugIndex',
+                    children:[
+                        {
+                            path:'/bug/bugIndex',
+                            name:'爬虫',
+                            component: () => import('../view/bugIndex.vue'),
+                        },
+                        // {
+                        //     path:'/game/gameNone',
+                        //     name:'摄像',
+                        //     component: () => import('../view/gameNone.vue'),
+                        // }
+                    ]
+                },
+
             ]
         },
         {

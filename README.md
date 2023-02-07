@@ -2,8 +2,9 @@
 1. 安装mysql80
 ```
 后面有空找个安装链接
+
 安装完成
-创建表
+创建用户表
 use sakila;
 create table user (
 userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -14,6 +15,18 @@ userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 insert into user value(2, 'zhangc','zhangc')
  
  ```
+
+```
+这保存上传文字图片的表
+use sakila;
+create table blog_items (
+	id varchar (64) NOT NULL UNIQUE PRIMARY KEY,
+    name varchar (64) NOT NULL,
+    content varchar(200),
+    imgPath varchar(255),
+    time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+)
+```
 
 2. 安装依赖
 ```angular2html

@@ -238,13 +238,6 @@ export default {
     height: calc(100% - 60px);
     overflow-y: auto;
   }
-  .el-table::-webkit-scrollbar {
-    width: 6px;
-    border: 1px solid #c3c3c3;
-  }
-  .el-table::-webkit-scrollbar-thumb {
-    background-color: #c3c3c3;
-  }
   .el-pagination {
     text-align: right;
     margin-top: 10px;
