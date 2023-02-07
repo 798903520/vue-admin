@@ -13,7 +13,7 @@
         </div>
         <div class="content">{{item.content}}</div>
         <div class="image">
-          <el-image :preview-src-list="[baseUrl+item.imgPath]" :src="baseUrl+item.imgPath"></el-image>
+          <el-image style="height: 150px;width: 150px" fit="cover" :preview-src-list="[baseUrl+item.imgPath]" :src="baseUrl+item.imgPath"></el-image>
         </div>
       </div>
     </div>
@@ -167,12 +167,7 @@ export default {
       formData.append('name',this.name);
       formData.append('content',this.content);
       formData.append('blobFile',this.blobFile);
-      let data = {
-        name:this.name,
-        content:this.content,
-        blobFile:this.blobFile,
-      };
-      addBlog(data).then(res => {
+      addBlog(formData).then(res => {
         console.log(res)
         if(res.code == 200){
           this.$notify.success('新增成功');
@@ -433,6 +428,10 @@ var loopData = {
         }
         .image{
           text-align: center;
+          .el-image{
+            border:1px solid #008d9d;
+            border-radius: 4px;
+          }
         }
       }
     }

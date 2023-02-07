@@ -2,42 +2,48 @@ const express = require('express');
 const fs = require('fs');
 const connection = require("../sql.js");
 const router = express.Router();
+const multiparty = require('multiparty');
 
 const utils = require('../public/utils/utils');
 
 router.post('/addBlog', function (req, res) {
     // 直接返回对象
-    // console.log('name&psw',req.body);
-    let imgData = req.body.blobFile;
     //过滤data:URL
-    let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
-    let dataBuffer = new Buffer.from(base64Data, 'base64');
-    let id = utils.ramdomNum() + utils.nowTime();
-    fs.writeFile(`./public/img/${id}.png`, dataBuffer, function(err) {
-        if(err){
-            res.send({
-                code:'100',
-                msg:err
-            })
-        }else{
-            let connection = require('../sql.js')
-            connection.init();
-            connection.connect();
-            let sql = `INSERT INTO blog_items values ('${id}','${req.body.name}','${req.body.content}','/public/img/${id}.png',NOW())`;
-            connection.query(sql).then(resbon => {
-                res.send({
-                    code:'200',
-                    msg:'发布成功'
-                });
-            }).catch((resbon) => {
+
+    let form = new multiparty.Form();
+    form.parse(req,(err, fields, files) => {
+        console.log(fields.name[0],fields.content[0])
+        let name = fields.name[0];
+        let content = fields.content[0];
+        let base64Data = fields.blobFile[0].replace(/^data:image\/\w+;base64,/, "");
+        let dataBuffer = new Buffer.from(base64Data, 'base64');
+        let id = utils.ramdomNum() + utils.nowTime();
+        fs.writeFile(`./public/img/${id}.png`, dataBuffer, function(err) {
+            if(err){
                 res.send({
                     code:'100',
-                    msg:resbon
+                    msg:err
+                })
+            }else{
+                let connection = require('../sql.js')
+                connection.init();
+                connection.connect();
+                let sql = `INSERT INTO blog_items values ('${id}','${name}','${content}','/public/img/${id}.png',NOW())`;
+                connection.query(sql).then(resbon => {
+                    res.send({
+                        code:'200',
+                        msg:'发布成功'
+                    });
+                }).catch((resbon) => {
+                    res.send({
+                        code:'100',
+                        msg:resbon
+                    });
                 });
-            });
-            connection.close();
-        }
-    });
+                connection.close();
+            }
+        });
+    })
 })
 router.post('/getBlog', function (req, res) {
     // 直接返回对象
