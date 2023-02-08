@@ -15,6 +15,7 @@ app.all('*', function(req, res, next) {
 app.use('/login', require('./login/login.js'));
 app.use('/first', require('./first/first.js'));
 app.use('/blog', require('./blog/blog.js'));
+app.use('/bug', require('./bug/bug.js'));
 app.listen('8001', () => {
   console.log('服务器启动成功')
 })

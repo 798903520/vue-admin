@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const connection = require("../sql.js");
 const router = express.Router();
+
+//解析FormData
 const multiparty = require('multiparty');
 
 const utils = require('../public/utils/utils');
@@ -54,7 +56,7 @@ router.post('/getBlog', function (req, res) {
     let sql = `SELECT * FROM blog_items order by id desc limit ${queryData.pageNum.length==0?'0':(queryData.pageNum-1)*queryData.pageSize},${queryData.pageSize};`;
     let sql2 = `select count(*) as total from blog_items;`
     // 查询
-    let p1 = connection.query(sql)
+    let p1 = connection.query(sql);
     let p2 = connection.query(sql2);
     Promise.all([p1,p2]).then((data)=>{
         res.send({

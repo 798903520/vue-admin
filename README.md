@@ -17,7 +17,7 @@ insert into user value(2, 'zhangc','zhangc')
  ```
 
 ```
-这保存上传文字图片的表
+创建保存上传文字图片的表
 use sakila;
 create table blog_items (
 	id varchar (64) NOT NULL UNIQUE PRIMARY KEY,

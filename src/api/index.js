@@ -11,7 +11,7 @@ import axios from 'axios'
 
 // 登录
 const getBili = (data) => {
-    return http.get('')
+    return http.post('bug/debugIt',data)
 }
 
 //查询blog
