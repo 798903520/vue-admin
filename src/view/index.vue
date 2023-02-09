@@ -7,7 +7,9 @@
       </div>
     </div>
     <div class="right">
-      <div class="top"></div>
+      <div class="top">
+        <nav1></nav1>
+      </div>
       <div class="content-all">
         <div class="content">
           <router-view></router-view>
@@ -19,10 +21,12 @@
 
 <script>
 import menuList from "../components/menu.vue"
+import nav from "../components/nav.vue"
 export default {
   name: "index",
   components:{
     menuList:menuList,
+    nav1:nav
   }
 }
 </script>
@@ -54,6 +58,7 @@ export default {
     .top{
       height: 60px;
       background-color: aliceblue;
+      width: 100%;
     }
     .content-all{
       width: calc(100% - 40px);

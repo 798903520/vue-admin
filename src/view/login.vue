@@ -31,6 +31,10 @@ export default {
       login(this.login).then(res => {
         if(res.code == 200){
           sessionStorage.setItem('MyToken',res.token);
+          sessionStorage.setItem('userData',JSON.stringify({
+            userName:res.data.userName,
+            imgPath: res.data.imgPath
+          }));
           this.$notify.success(res.msg);
           this.$router.push('/');
         }else{

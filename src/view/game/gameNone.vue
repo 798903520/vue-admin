@@ -5,7 +5,7 @@
     <div class="item_list">
       <div v-for="item in blog_list" :key="item.id" class="blogItem">
         <div class="head_name_time">
-          <img :src="baseUrl+item.imgPath" alt="">
+          <img :src="baseUrl+head.imgPath" alt="">
           <div class="name_time">
             <span class="name">{{item.name}}</span>
             <span>{{item.time}}</span>
@@ -87,9 +87,9 @@
 </template>
 
 <script>
-import {toBase64} from '../js/jsFun.js'
-import {addBlog,getBlog} from "../api/index.js"
-import itemLoop from "./compolents/itemLoop.vue";
+import {toBase64} from '../../js/jsFun.js'
+import {addBlog,getBlog} from "../../api"
+import itemLoop from "../compolents/itemLoop.vue";
 export default {
   name: "blog",
   components:{
@@ -249,6 +249,7 @@ export default {
 }
 </script>
 <script setup>
+const head = JSON.parse(sessionStorage.getItem('userData'));
 var loopData = {
   style:{
     height:"100%",

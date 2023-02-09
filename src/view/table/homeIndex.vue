@@ -79,7 +79,7 @@
 
 <script>
 // 引入接口API
-import { getCityList, getOneData ,add ,edit } from "../api/index";
+import { getCityList, getOneData ,add ,edit } from "../../api";
 export default {
   name:"home",
   data() {

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {getBili} from '../api/index'
+import {getBili} from '../../api'
 export default {
   name: "bugIndex",
   data(){

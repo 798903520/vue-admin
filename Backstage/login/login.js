@@ -10,10 +10,11 @@ router.post('/login', function (req, res) {
   connection.query(sql).then(rsb => {
     if(rsb.length == 0){
       res.send({ code: '2300', token: 'zhangc', msg: '用户不存在!请联系管理员' });
+      return;
     }
     let data = {...rsb[0]};
     if(data.psw == req.body.psw){
-      res.send({ code: '200', token: 'zhangc', msg: '登录成功' });
+      res.send({ code: '200', token: 'zhangc',data:data, msg: '登录成功' });
       return;
     }else{
       res.send({ code: '2300', token: 'zhangc', msg: '密码错误！' });

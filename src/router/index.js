@@ -23,12 +23,12 @@ const router = createRouter({
                         {
                             path:'/home/homeIndex',
                             name:'表格',
-                            component: () => import('../view/homeIndex.vue'),
+                            component: () => import('../view/table/homeIndex.vue'),
                         },
                         {
                             path:'/home/domMove',
                             name:'移动',
-                            component: () => import('../view/domMove.vue'),
+                            component: () => import('../view/table/domMove.vue'),
                         }
                     ]
                 },
@@ -40,12 +40,12 @@ const router = createRouter({
                         {
                             path:'/game/gameIndex',
                             name:'游戏',
-                            component: () => import('../view/gameIndex.vue'),
+                            component: () => import('../view/game/gameIndex.vue'),
                         },
                         {
                             path:'/game/gameNone',
                             name:'摄像',
-                            component: () => import('../view/gameNone.vue'),
+                            component: () => import('../view/game/gameNone.vue'),
                         }
                     ]
                 },
@@ -57,7 +57,7 @@ const router = createRouter({
                         {
                             path:'/bug/bugIndex',
                             name:'爬虫',
-                            component: () => import('../view/bugIndex.vue'),
+                            component: () => import('../view/debug/bugIndex.vue'),
                         },
                         // {
                         //     path:'/game/gameNone',
