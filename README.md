@@ -1,4 +1,4 @@
-# (以后可能做个商城,目前就我自己写着玩的)
+# 
 1. 安装mysql80
 2. 安装请查看此链接
 
@@ -10,11 +10,13 @@
 use sakila;
 create table user (
 userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    userName VARCHAR(50) NOT NULL,
-    psw VARCHAR(50) NOT NULL,
+    userName VARCHAR(64) NOT NULL,
+    psw VARCHAR(64) NOT NULL,
+    imgPath varchar(255)
 );
 //创建用户名密码,可自行修改
-insert into user value(2, 'zhangc','zhangc')
+use sakila ;
+INSERT INTO user VALUES ( NULL,"zhangc","zhangc",null);
  
  ```
 
