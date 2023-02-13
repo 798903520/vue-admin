@@ -46,6 +46,11 @@ const router = createRouter({
                             path:'/game/gameNone',
                             name:'摄像',
                             component: () => import('../view/game/gameNone.vue'),
+                        },
+                        {
+                            path:'/game/ball',
+                            name:'小球',
+                            component: () => import('../view/game/ball.vue'),
                         }
                     ]
                 },
