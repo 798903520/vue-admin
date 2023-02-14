@@ -4,22 +4,27 @@ export default class ball {
     left=null//左部距离
     color=null//颜色
     speed=null//速度
+    moveType=null// 方向
+    timmer=null//定时器
     constructor(
-        len=this.randomNum(),
-        top=this.randomNum(),
-        left=this.randomNum(),
-        speed=this.randomNum(),
+        len=this.randomNum(100),
+        // top,
+        // left,
+        speed=this.randomNum(10-1)+1,
+        moveType=this.randomNum(12)
     ) {
         this.len = len;
-        this.top = top;
-        this.left = left;
+        this.top = this.randomNum(500-(len*2))+len;
+        this.left = this.randomNum(500-(len*2))+len;
         this.color = this.randomColor();
-        this.speed = speed;
+        this.speed = (100 - len)/40;
+        this.moveType = moveType;
+        console.log(this.len,this.speed,-(-500))
     }
 
     //随机数据
-    randomNum(){
-        return Math.floor(Math.random()*100)
+    randomNum(size){
+        return Math.floor(Math.random()*size)
     }
     //随机颜色
     randomColor(){
