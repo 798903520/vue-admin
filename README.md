@@ -41,9 +41,6 @@ create table blog_items (
 ```
 
 ```
-  
-  
-  创建商品表
   创建订单表
   use sakila ;
   //创建商品类型表
