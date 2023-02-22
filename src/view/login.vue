@@ -33,9 +33,13 @@ export default {
           sessionStorage.setItem('MyToken',res.token);
           sessionStorage.setItem('userData',JSON.stringify({
             userName:res.data.userName,
-            imgPath: res.data.imgPath
+            imgPath: res.data.imgPath,
+            permission:res.data.permission
           }));
           this.$notify.success(res.msg);
+          if(res.data.permission == 'root'){
+            this.$router.push('/index');
+          }
           this.$router.push('/');
         }else{
           this.$notify.error(res.msg);

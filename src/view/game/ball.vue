@@ -70,6 +70,7 @@ export default {
 }
 </script>
 <script setup>
+// 立即执行 闭包函数绑定到window
 !(function ballFun () {
   let ballData = [];
   window.newBall = function (x){

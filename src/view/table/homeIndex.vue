@@ -1,80 +1,18 @@
 <template>
-  <div class="home">
-    <div class="headder">
-      <el-input
-          clearable
-          class="search"
-          v-model="query.city"
-          placeholder="输入城市名字"
-      ></el-input>
-      <el-button size="large" type="primary" @click="searchList">搜索</el-button>
-      <el-button size="large" type="primary" @click="addORedit('add')" plain>新增</el-button>
-    </div>
-    <div class="tables">
-      <el-table :data="cityList.data" border style="width: 100%">
-        <el-table-column type="index" align="center" label="序号" width="70px">
-        </el-table-column>
-        <el-table-column prop="city_id" label="城市id" width="120px">
-        </el-table-column>
-        <el-table-column prop="city" label="城市名称"> </el-table-column>
-        <el-table-column prop="country_id" label="国家id" width="120px">
-        </el-table-column>
-        <el-table-column prop="last_update" label="最后更新时间">
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template #default="scope">
-              <el-button text type="primary" @click="addORedit(scope.row.city_id)">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          background
-          @size-change="sizeChange"
-          @current-change="currChange"
-          :page-sizes="[25, 50, 100]"
-          :current-page.sync="(Number(query.pageNum))"
-          layout=" sizes, prev, pager, next, jumper,total"
-          :total="Number(cityList.total)"
-      >
-      </el-pagination>
-    </div>
-    <el-dialog
-        :title="title"
-        v-model="dialogVisible"
-        width="500px"
-        :before-close="dialogBeforeClose"
-    >
-      <div class="dialogBody">
-        <div class="item">
-          <span class="leftLabel"> 城市id </span>
-          <el-input v-model="editData.city_id" placeholder="输入国家名称" :disabled='type=="add"?false:true'></el-input>
-        </div>
-        <div class="item">
-          <span class="leftLabel"> 城市名称 </span>
-          <el-input
-              v-model="editData.city"
-              placeholder="输入国家名称"
-          ></el-input>
-        </div>
-        <div class="item">
-          <span class="leftLabel"> 国家id </span>
-          <el-input v-model="editData.country_id" placeholder="输入国家名称" :disabled='type=="add"?false:true'></el-input>
-        </div>
-
-        <div class="item">
-          <span class="leftLabel"> 更新时间 </span>
-          <!-- <el-input v-model="editData.last_update" placeholder="输入国家名称" :disabled='type=="add"?false:true'></el-input> -->
-          <el-date-picker :editable="false" v-model="editData.last_update" :disabled='type=="add"?false:true' value-format='yyyy-MM-DD HH:mm:ss' type="datetime" placeholder="date"></el-date-picker>
-        </div>
-      </div>
-      <div class="footer" slot="footer">
-        <el-button size="large" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="large" type="primary" @click='addOrEditOne()'
-        >确 定</el-button
-        >
-      </div>
-    </el-dialog>
-  </div>
+  <el-dropdown class="dpd" @command="clickDRP">
+    <span class="el-dropdown-link">
+      当前表 : {{ now_table }}
+    </span>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="city">city</el-dropdown-item>
+        <el-dropdown-item command="product_type" divided>product_type</el-dropdown-item>
+        <el-dropdown-item command="product_business" divided>product_business</el-dropdown-item>
+        <el-dropdown-item command="product" divided>product</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  <city :now_table="now_table"></city>
 </template>
 
 <script>
@@ -84,6 +22,7 @@ export default {
   name:"home",
   data() {
     return {
+      now_table:'city',
       query: {
         pageSize: 10,
         pageNum: 1,
@@ -102,6 +41,11 @@ export default {
     };
   },
   methods: {
+    //  切换表格
+    clickDRP(event){
+      this.now_table = event;
+    },
+
     // 新增或编辑
     addOrEditOne(){
       if(this.type == 'add'){
@@ -183,66 +127,10 @@ export default {
   },
 };
 </script>
+<script setup>
+  import city from './city.vue';
+</script>
 
 <style lang="less" scoped>
-.footer{
-  text-align: right;
-}
-.dialogBody{
-  display: flex;
-  width: 100%;
-  height: auto;
-  flex-direction: column;
-  .item{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .leftLabel{
-    display: inline-block;
-    width: 60px;
-    text-align: right;
-    margin-right: 20px;
-  }
-  :deep(.el-input){
-    flex: 1;
-  }
-}
-.el-input {
-  width: 200px;
-}
-.home {
-  //position: absolute;
-  height: calc(100% - 30px);
-  top: 0;
-  left: 0;
-  width: calc(100% - 60px);
-  padding: 30px;
-  .search {
-    width: 200px;
-    margin-right: 10px;
-  }
-  .headder {
-    display: flex;
-    height: 40px;
-    justify-content: left;
-  }
-  .tables {
-    width: 100%;
-    height: calc(100% - 40px);
-    margin-top: 10px;
-  }
-  .el-table {
-    width: 100%;
-    height: calc(100% - 60px);
-    overflow-y: auto;
-  }
-  .el-pagination {
-    text-align: right;
-    margin-top: 10px;
-    height: 40px;
-    padding: 0;
-  }
-}
+
 </style>
