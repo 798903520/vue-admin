@@ -20,11 +20,13 @@ userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     permission VARCHAR(15),
     userName VARCHAR(64) NOT NULL,
     psw VARCHAR(64) NOT NULL,
-    imgPath varchar(255)
+    collect_goods varchar(255),
+    collect_business varchar(255),
+    imgPath varchar(255),
 );
 //创建用户名密码,可自行修改
 use sakila ;
-INSERT INTO user VALUES ( NULL,"root","zhangc","zhangc",'/public/img/1675755927056.png');
+INSERT INTO user VALUES ( NULL,"root","zhangc","zhangc",,null,null,'/public/img/1675755927056.png');
  
  ```
 
@@ -41,7 +43,6 @@ create table blog_items (
 ```
 
 ```
-  创建订单表
   use sakila ;
   //创建商品类型表
 create table p_type (
@@ -50,21 +51,24 @@ create table p_type (
 );
 //创建商家表
 create table p_business (
-	type varchar (24) NOT NULL,
+    type varchar (24) NOT NULL,
     p_b_id varchar (64) NOT NULL UNIQUE PRIMARY KEY,
     name varchar (64) NOT NULL,
+    fans varchar(255),
     content varchar(200),
     headImgPath varchar(255),
     createTime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
 );
 //创建商品表
 create table product (
-	type varchar (24) NOT NULL,
-	p_b_id varchar (64) NOT NULL,
+    type varchar (24) NOT NULL,
+    p_b_id varchar (64) NOT NULL,
     product_id varchar (64) NOT NULL UNIQUE PRIMARY KEY,
     name varchar (64) NOT NULL,
     content varchar(200),
     imgPaths varchar(255),
+    surplus varchar(64),
+    color varchar(144),
     create_product_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
 )
 ```
@@ -73,7 +77,7 @@ create table product (
 ```angular2html
 安装express和mysql
 
-打开just_test文件夹
+打开vue-admin文件夹
 
 npm install
 
@@ -89,7 +93,7 @@ npm serve
 ```angular2html
 打开前端文件夹
 在前端文件夹目录控制台 运行命令
-cd Backstage
+cd ./Backstage
 node index.js
 
 启动成功控制台会显示消息
