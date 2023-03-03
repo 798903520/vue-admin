@@ -46,84 +46,8 @@ export default {
       this.now_table = event;
     },
 
-    // 新增或编辑
-    addOrEditOne(){
-      if(this.type == 'add'){
-        add(this.editData).then(res => {
-          if(res.code == 200){
-            this.$notify.success('新增成功');
-          }else{
-            this.$notify.error(res.msg);
-          }
-          this.searchList();
-          this.dialogBeforeClose();
-        });
-      }
-      else{
-        edit(this.editData).then(res => {
-          if(res.code == 200){
-            this.$notify.success('编辑成功');
-          }else{
-            this.$notify.error(res.msg);
-          }
-          this.searchList();
-          this.dialogBeforeClose();
-        });
-      }
-    },
-    // 关闭弹窗
-    dialogBeforeClose() {
-      this.dialogVisible = false;
-    },
-    // 打开弹窗
-    addORedit(type) {
-      this.type = type;
-      console.log(type);
-      if (this.type != "add") {
-        getOneData({ id: this.type }).then((res) => {
-          if (res.code == 200) {
-            this.editData = res.data;
-          }
-        });
-      }else{
-        this.editData = {
-          city_id:'',
-          city:'',
-          country_id:'',
-          last_update:''
-        }
-      }
-      this.dialogVisible = true;
-    },
-    // 查询
-    searchList() {
-      this.query.pageNum = "1";
-      this.getList();
-    },
-    // 分页查询方法
-    sizeChange(val) {
-      this.query.pageSize = val;
-      this.query.pageNum = "1";
-      this.getList();
-    },
-    currChange(val) {
-      this.query.pageNum = val;
-      this.getList();
-    },
-    // 获取列表数据
-    getList() {
-      getCityList(this.query).then((res) => {
-        if (res.code == '200') {
-          this.cityList = res;
-          this.$notify.success(res.msg);
-        } else {
-          this.$notify.error(res.msg);
-        }
-      });
-    },
   },
   mounted() {
-    this.getList();
   },
 };
 </script>

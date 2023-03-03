@@ -68,3 +68,49 @@
     padding: 0;
   }
 }
+
+// 突出效果
+.m_convex:hover{
+  box-shadow: -2px -2px 3px 3px white,
+  2px 2px 3px 3px rgb(234, 234, 234);
+  background-color: white;
+  border-radius: 50%;
+  animation: change2 0.3s;
+}
+@keyframes change2 {
+  0%{
+    box-shadow:inset -1px -1px 1px 1px white,
+          inset 2px 2px 3px 3px rgb(182, 182, 182);
+  background-color: rgb(234, 234, 234);
+  border-radius: 50%;
+  }
+  100%{
+    box-shadow: -2px -2px 3px 3px white,
+  2px 2px 3px 3px rgb(234, 234, 234);
+  background-color: white;
+  border-radius: 50%;
+  }
+}
+@keyframes change {
+  0%{
+    box-shadow: -1px -1px 1px 1px white,
+  2px 2px 3px 3px rgb(234, 234, 234);
+  background-color: white;
+  border-radius: 50%;
+  }
+  100%{
+    box-shadow:inset -1px -1px 1px 1px white,
+          inset 2px 2px 3px 3px rgb(182, 182, 182);
+  background-color: rgb(234, 234, 234);
+  border-radius: 50%;
+  }
+
+}
+// 凹陷效果
+.m_convex{
+  box-shadow:inset -1px -1px 1px 1px white,
+          inset 2px 2px 3px 3px rgb(182, 182, 182);
+  background-color: rgb(234, 234, 234);
+  border-radius: 50%;
+  animation: change 0.3s;
+}

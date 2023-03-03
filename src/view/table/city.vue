@@ -175,6 +175,7 @@ export default {
       getCityList(this.query).then((res) => {
         if (res.code == '200') {
           this.cityList = res;
+          this.$forceUpdate();
           this.$notify.success(res.msg);
         } else {
           this.$notify.error(res.msg);

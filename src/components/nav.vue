@@ -1,6 +1,6 @@
 <template>
 <div class="nav">
-  <img :src="url+name.imgPath" title="点击上传头像" alt="无">
+  <img class="m_convex" :src="url+name.imgPath" title="点击上传头像" alt="无">
   <span>{{name.userName}}</span>
 </div>
 </template>
@@ -28,7 +28,6 @@ const url = import.meta.env.VITE_APP_BASE_API;
     width: 50px;
     margin-right: 20px ;
     border-radius: 50%;
-    border: 1px solid black;
   }
 }
 </style>
