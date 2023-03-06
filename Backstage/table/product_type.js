@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router()
-router.get('/getCityList', function (req, res) {
+router.get('/get_p_t_List', function (req, res) {
   // 直接返回对象
   let queryData = req.query;
 let connection = require('../sql.js')
     connection.init();
     connection.connect();
-    let sql = `SELECT * FROM city ${queryData.city.length==0?'':'where city like "%'+queryData.city+'%"'} limit ${queryData.pageNum.length==0?'0':(queryData.pageNum-1)*queryData.pageSize},${queryData.pageSize.length==0?'10':queryData.pageSize};`;
-    let sql2 = `select count(*) as total from city ${queryData.city?'where city like "%'+queryData.city+'%"':''};`
+    let sql = `SELECT * FROM p_type ${queryData.typeName.length==0?'':'where typeName like "%'+queryData.typeName+'%"'} limit ${queryData.pageNum.length==0?'0':(queryData.pageNum-1)*queryData.pageSize},${queryData.pageSize.length==0?'10':queryData.pageSize};`;
+    let sql2 = `select count(*) as total from p_type ${queryData.typeName?'where typeName like "%'+queryData.typeName+'%"':''};`
     // 查询
     let p1 = connection.query(sql)
     let p2 = connection.query(sql2);
@@ -27,13 +27,13 @@ let connection = require('../sql.js')
     connection.close();
 })
 
-router.get('/editData', function (req, res) {
+router.get('/get_p_t_Data', function (req, res) {
   // 直接返回对象
   let queryData = req.query;
   let connection = require('../sql.js')
     connection.init();
     connection.connect();
-    let sql = `SELECT * FROM city where city_id = '${queryData.id}'`;
+    let sql = `SELECT * FROM p_type where city_id = '${queryData.id}'`;
     // 查询
     connection.query(sql).then(response => {
       res.send({
@@ -52,7 +52,7 @@ router.get('/editData', function (req, res) {
 })
 
 // 新增
-router.post('/add', function (req, res) {
+router.post('/add_PT', function (req, res) {
   // 直接返回对象
   console.log('name&psw',req.body);
   let data = req.body;
@@ -71,7 +71,7 @@ router.post('/add', function (req, res) {
   connection.close();
 })
 // 编辑
-router.post('/edit', function (req, res) {
+router.post('/edit_PT', function (req, res) {
   // 直接返回对象
   console.log('name&psw',req.body);
   let connection = require('../sql.js')

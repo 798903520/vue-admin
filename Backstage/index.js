@@ -13,9 +13,13 @@ app.all('*', function(req, res, next) {
 });
 
 app.use('/login', require('./login/login.js'));
-app.use('/first', require('./first/first.js'));
+app.use('/table', require('./table/first.js'));
+app.use('/table', require('./table/product.js'));
+app.use('/table', require('./table/product_type.js'));
+app.use('/table', require('./table/product_business.js'));
 app.use('/blog', require('./blog/blog.js'));
 app.use('/bug', require('./bug/bug.js'));
+app.use('/upload', require('./uploadImg/upload.js'));
 app.listen('8001', () => {
   console.log('服务器启动成功')
 })

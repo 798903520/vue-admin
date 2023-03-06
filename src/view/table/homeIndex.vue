@@ -13,11 +13,13 @@
     </template>
   </el-dropdown>
   <city :now_table="now_table"></city>
+  <product_type :now_table="now_table"></product_type>
+  <product_business :now_table="now_table"></product_business>
+  <product :now_table="now_table"></product>
 </template>
 
 <script>
 // 引入接口API
-import { getCityList, getOneData ,add ,edit } from "../../api";
 export default {
   name:"home",
   data() {
@@ -53,6 +55,9 @@ export default {
 </script>
 <script setup>
   import city from './city.vue';
+  import product_type from './product_type.vue';
+  import product_business from './product_business.vue';
+  import product from './product.vue';
 </script>
 
 <style lang="less" scoped>
