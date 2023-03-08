@@ -46,7 +46,8 @@ create table blog_items (
   use sakila ;
   //创建商品类型表
 create table p_type (
-    type varchar (24) NOT NULL UNIQUE PRIMARY KEY,
+    typeId int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    type varchar (24) NOT NULL UNIQUE,
     typeName varchar (24) NOT NULL
 );
 //创建商家表

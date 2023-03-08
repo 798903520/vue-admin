@@ -12,10 +12,10 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <city :now_table="now_table"></city>
-  <product_type :now_table="now_table"></product_type>
-  <product_business :now_table="now_table"></product_business>
-  <product :now_table="now_table"></product>
+  <city v-if="now_table == 'city'"></city>
+  <product_type v-if="now_table == 'product_type'"></product_type>
+  <product_business v-if="now_table == 'product_business'"></product_business>
+  <product v-if="now_table == 'product'"></product>
 </template>
 
 <script>

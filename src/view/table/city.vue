@@ -1,5 +1,5 @@
 <template>
-  <div v-if="now_table == 'city'" class="home">
+  <div class="home">
     <div class="headder">
       <el-input
           clearable

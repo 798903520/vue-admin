@@ -33,7 +33,7 @@ router.get('/get_p_t_Data', function (req, res) {
   let connection = require('../sql.js')
     connection.init();
     connection.connect();
-    let sql = `SELECT * FROM p_type where city_id = '${queryData.id}'`;
+    let sql = `SELECT * FROM p_type where typeId = '${queryData.typeId}'`;
     // 查询
     connection.query(sql).then(response => {
       res.send({
@@ -59,10 +59,10 @@ router.post('/add_PT', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `INSERT INTO city (city_id,city,country_id,last_update) values ("${data.city_id}","${data.city}","${data.country_id}","${data.last_update}")`;
+  let sql = `INSERT INTO p_type (type,typeName) values ("${data.type}","${data.typeName}")`;
   console.log('sql',sql);
   connection.query(sql).then(rsb => {
-    res.send({ code: '200', token: 'zhangc', msg: '新增成功' });
+    res.send({ code: '200', msg: '新增成功' });
   }).catch(rsb => {
     console.log('error', rsb);
     res.send({ code: '2300', token: 'zhangc', msg: '新增失败，请联系管理员' });
@@ -77,12 +77,30 @@ router.post('/edit_PT', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `UPDATE city set city = "${req.body.city}" where city_id = ${req.body.city_id}`;
+  let sql = `UPDATE p_type set type = "${req.body.type}",typeName = "${req.body.typeName}" where typeId = ${req.body.typeId}`;
   connection.query(sql).then(rsb => {
     res.send({ code: '200', token: 'zhangc', msg: '修改成功' });
   }).catch(rsb => {
     console.log('error', rsb);
     res.send({ code: '2300', token: 'zhangc', msg: '修改失败，请联系管理员' });
+
+  });
+  connection.close();
+})
+
+// 删除
+router.post('/delete_PT', function (req, res) {
+  // 直接返回对象
+  console.log('name&psw',req.body);
+  let connection = require('../sql.js')
+  connection.init();
+  connection.connect();
+  let sql = `delete form p_type where typeId in (${req.body.ids})`;
+  connection.query(sql).then(rsb => {
+    res.send({ code: '200', token: 'zhangc', msg: '删除成功' });
+  }).catch(rsb => {
+    console.log('error', rsb);
+    res.send({ code: '2300', token: 'zhangc', msg: '删除失败，请联系管理员' });
 
   });
   connection.close();
