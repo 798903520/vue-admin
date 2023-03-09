@@ -9,7 +9,7 @@ axios.defaults.baseURL = '/api/'
 var _token = sessionStorage.getItem('_token') || undefined;
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-    console.log('config',config)
+    // console.log('config',config)
     // 在发送请求之前做些什么  bug=1的时候,直接放行
     if (config.method == "get"&&config.bug!=1) {
         if (config.params && config.params.token) {

@@ -1,14 +1,14 @@
 <template>
   <el-dropdown class="dpd" @command="clickDRP">
     <span class="el-dropdown-link">
-      当前表 : {{ now_table }}
+      {{ table_name(now_table) }} 表格
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="city">city</el-dropdown-item>
-        <el-dropdown-item command="product_type" divided>product_type</el-dropdown-item>
-        <el-dropdown-item command="product_business" divided>product_business</el-dropdown-item>
-        <el-dropdown-item command="product" divided>product</el-dropdown-item>
+        <el-dropdown-item command="city">城市</el-dropdown-item>
+        <el-dropdown-item command="product_type" divided>商品类型</el-dropdown-item>
+        <el-dropdown-item command="product_business" divided>商家</el-dropdown-item>
+        <el-dropdown-item command="product" divided>商品</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -46,6 +46,18 @@ export default {
     //  切换表格
     clickDRP(event){
       this.now_table = event;
+    },
+    // 展示
+    table_name(value){
+      if(value == 'city'){
+        return '城市';
+      }else if(value == 'product_type'){
+        return '商品类型';
+      }else if(value == 'product_business'){
+        return '商家';
+      }else if(value == 'product'){
+        return '商品';
+      }
     },
 
   },

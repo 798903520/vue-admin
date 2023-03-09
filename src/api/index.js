@@ -60,9 +60,13 @@ const edit_PT = (data) => {
 const get_p_t_Data = (data) => {
     return http.get('table/get_p_t_Data',data)
 }
-// 获取公共服务城市列表
+// 获取商品类型列表
 const get_p_t_List = (data) => {
     return http.get('table/get_p_t_List',data)
+}
+// 删除
+const delete_p_t = (data) => {
+    return http.post('table/delete_PT',data)
 }
 
 /**
@@ -84,6 +88,10 @@ const get_p_b_Data = (data) => {
 const get_p_b_List = (data) => {
     return http.get('table/get_p_b_List',data)
 }
+// 删除
+const delete_p_b = (data) => {
+    return http.post('table/delete_PB',data)
+}
 
 
 /**
@@ -104,6 +112,10 @@ const get_p_Data = (data) => {
 // 获取公共服务城市
 const get_p_List = (data) => {
     return http.get('table/get_p_List',data)
+}
+// 删除
+const delete_p = (data) => {
+    return http.post('table/delete_P',data)
 }
 
 // 登录
@@ -129,16 +141,19 @@ export {
     edit_PT,
     get_p_t_Data,
     get_p_t_List,
+    delete_p_t,
 // 商家
     add_PB,
     edit_PB,
     get_p_b_Data,
     get_p_b_List,
+    delete_p_b,
 // 商品
     add_P,
     edit_P,
     get_p_Data,
     get_p_List,
+    delete_p,
 
 
     getBili,
