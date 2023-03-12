@@ -95,6 +95,7 @@ router.post('/delete_PT', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
+  let sql = `delete from p_type where typeId in (${req.body.ids})`;
   console.log('sql',sql);
   connection.query(sql).then(rsb => {
     res.send({ code: '200', token: 'zhangc', msg: '删除成功' });

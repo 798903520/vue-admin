@@ -14,14 +14,14 @@
       <el-table :data="cityList.data" border style="width: 100%">
         <el-table-column type="index" align="center" label="序号" width="70px">
         </el-table-column>
-        <el-table-column prop="city_id" label="城市id" width="120px">
+        <el-table-column prop="city_id" align="center" label="城市id" width="120px">
         </el-table-column>
-        <el-table-column prop="city" label="城市名称"> </el-table-column>
-        <el-table-column prop="country_id" label="国家id" width="120px">
+        <el-table-column prop="city" align="center" label="城市名称"> </el-table-column>
+        <el-table-column prop="country_id" align="center" label="国家id" width="120px">
         </el-table-column>
-        <el-table-column prop="last_update" label="最后更新时间">
+        <el-table-column prop="last_update" align="center" label="最后更新时间">
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" align="center" width="200">
           <template #default="scope">
               <el-button text type="primary" @click="addORedit(scope.row.city_id)">编辑</el-button>
           </template>

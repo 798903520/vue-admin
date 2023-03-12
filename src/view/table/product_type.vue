@@ -12,12 +12,12 @@
         <el-table-column type="selection"></el-table-column>
         <el-table-column type="index" align="center" label="序号" width="70px">
         </el-table-column>
-        <el-table-column prop="typeId" label="id" width="120px">
+        <el-table-column prop="typeId" align="center" label="id" width="120px">
         </el-table-column>
-        <el-table-column prop="type" label="类型" width="120px">
+        <el-table-column prop="type" align="center" label="类型" width="120px">
         </el-table-column>
-        <el-table-column prop="typeName" label="类型名称"> </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column prop="typeName" align="center" label="类型名称"> </el-table-column>
+        <el-table-column label="操作" align="center" width="200">
           <template #default="scope">
             <el-button text type="primary" @click="addORedit(scope.row.typeId)">编辑</el-button>
             <el-button text type="primary" @click="deleteMoreAndOne(scope.row.typeId)">删除</el-button>
@@ -181,6 +181,7 @@ export default {
       }).then(() => {
         delete_p_t({ ids: this.ids }).then((res) => {
           if (res.code == 200) {
+            console.log('err',res);
             this.searchList();
           }
           this.$notify.success(res.msg);
