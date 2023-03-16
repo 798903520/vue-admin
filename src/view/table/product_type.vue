@@ -44,7 +44,14 @@
         </div>
         <div class="item">
           <span class="leftLabel"> 子类型 </span>
-          <el-input v-model="editData.children_type" placeholder="输入类型名称"></el-input>
+          <div class="children">
+            <el-input class="check_input" v-model="add_children" placeholder="输入类型名称">
+              <template #append>
+                <el-button @click="add_to_children()">+</el-button>
+              </template>
+            </el-input>
+            <span class="is_add_children" v-for="item in children_group" :key="item">{{ item }}</span>
+          </div>
         </div>
       </div>
       <div class="footer" slot="footer">
@@ -55,9 +62,29 @@
   </div>
 </template>
 <script setup>
+import {computed,ref,reactive} from 'vue';
 const props = defineProps({
   now_table: String
 })
+
+const add_children=ref('');
+const editData = reactive({
+        type: '',
+        typeName: '',
+        children_type: ''
+      });
+const children_group = computed({
+  get: () => {
+    let data = editData.children_type.length == 0?[]:editData.children_type.split(',');
+    return data;
+  }
+});
+// 新增子类型
+function add_to_children(){
+      editData.children_type.length == 0?
+      editData.children_type = add_children:
+      editData.children_type = `${editData.children_type} , ${add_children}`;
+    };
 </script>
 <script>
 import { ElMessage, ElMessageBox } from 'element-plus';
@@ -76,11 +103,6 @@ export default {
       typeList: {},
       title: "新增",
       type: "",
-      editData: {
-        type: '',
-        typeName: '',
-        children_type:''
-      },
       dialogVisible: false,
     };
   },
@@ -90,6 +112,12 @@ export default {
   },
 
   methods: {
+    // 新增子类型
+    add_to_children(){
+      this.editData.children_type.length == 0?
+      this.editData.children_type = this.add_children:
+      this.editData.children_type = `${this.editData.children_type} , ${this.add_children}`;
+    },
     // 新增或编辑
     addOrEditOne() {
       if (this.type == 'add') {
@@ -172,9 +200,9 @@ export default {
       })
     },
     // 删除
-    deleteMoreAndOne(id='-1') {
-      id == -1?'':this.ids = id;
-      if(this.ids.length==0){
+    deleteMoreAndOne(id = '-1') {
+      id == -1 ? '' : this.ids = id;
+      if (this.ids.length == 0) {
         this.$notify.error('请选择至少一条数据');
         return;
       }
@@ -187,7 +215,7 @@ export default {
       }).then(() => {
         delete_p_t({ ids: this.ids }).then((res) => {
           if (res.code == 200) {
-            console.log('err',res);
+            console.log('err', res);
             this.searchList();
           }
           this.$notify.success(res.msg);
@@ -200,4 +228,17 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  .dialogBody{
+    .is_add_children{
+      display: inline-block;
+      background-color: aliceblue;
+      border: 1px solid black;
+      border-radius: 2px;
+      min-width: 60px;
+    }
+    .check_input{
+      width: 150px;
+    }
+  }
+</style>
