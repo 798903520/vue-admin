@@ -14,9 +14,10 @@
         </el-table-column>
         <el-table-column prop="typeId" align="center" label="id" width="120px">
         </el-table-column>
-        <el-table-column prop="type" align="center" label="类型" width="120px">
+        <el-table-column prop="type" align="center" label="标识" width="120px">
         </el-table-column>
         <el-table-column prop="typeName" align="center" label="类型名称"> </el-table-column>
+        <el-table-column prop="children_type" align="center" label="子类型"> </el-table-column>
         <el-table-column label="操作" align="center" width="200">
           <template #default="scope">
             <el-button text type="primary" @click="addORedit(scope.row.typeId)">编辑</el-button>
@@ -40,6 +41,10 @@
         <div class="item">
           <span class="leftLabel"> 类型名称 </span>
           <el-input v-model="editData.typeName" placeholder="输入类型名称"></el-input>
+        </div>
+        <div class="item">
+          <span class="leftLabel"> 子类型 </span>
+          <el-input v-model="editData.children_type" placeholder="输入类型名称"></el-input>
         </div>
       </div>
       <div class="footer" slot="footer">
@@ -74,6 +79,7 @@ export default {
       editData: {
         type: '',
         typeName: '',
+        children_type:''
       },
       dialogVisible: false,
     };

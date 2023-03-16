@@ -48,7 +48,8 @@ create table blog_items (
 create table p_type (
     typeId int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     type varchar (24) NOT NULL UNIQUE,
-    typeName varchar (24) NOT NULL
+    typeName varchar (24) NOT NULL,
+    children_type varchar(200)
 );
 //创建商家表
 create table p_business (
