@@ -45,12 +45,17 @@
         <div class="item">
           <span class="leftLabel"> 子类型 </span>
           <div class="children">
-            <el-input class="check_input" v-model="add_children" placeholder="输入类型名称">
+            <el-input class="check_input" v-model="add_children" @keyup.enter="add_to_children()" placeholder="输入新增类型名称">
               <template #append>
                 <el-button @click="add_to_children()">+</el-button>
               </template>
             </el-input>
-            <span class="is_add_children" v-for="item in children_group" :key="item">{{ item }}</span>
+            <div class="children_item">
+              <span class="is_add_children" v-for="item in children_group" :key="item">
+                {{ item }}
+                <span class="delete_it" @click="delete_children(item)">&#10005;</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -62,29 +67,10 @@
   </div>
 </template>
 <script setup>
-import {computed,ref,reactive} from 'vue';
 const props = defineProps({
   now_table: String
 })
 
-const add_children=ref('');
-const editData = reactive({
-        type: '',
-        typeName: '',
-        children_type: ''
-      });
-const children_group = computed({
-  get: () => {
-    let data = editData.children_type.length == 0?[]:editData.children_type.split(',');
-    return data;
-  }
-});
-// 新增子类型
-function add_to_children(){
-      editData.children_type.length == 0?
-      editData.children_type = add_children:
-      editData.children_type = `${editData.children_type} , ${add_children}`;
-    };
 </script>
 <script>
 import { ElMessage, ElMessageBox } from 'element-plus';
@@ -104,22 +90,63 @@ export default {
       title: "新增",
       type: "",
       dialogVisible: false,
+      add_children:'',
+      editData:{
+        type: '',
+        typeName: '',
+        children_type: ''
+      }
     };
   },
 
   mounted() {
     this.searchList();
   },
-
+computed:{
+  children_group(){
+    let is = this.editData.children_type == null||this.editData.children_type.length == 0;
+    return is?[]:this.editData.children_type.split(',');
+  },
+},
   methods: {
+    // 删除子类型
+    delete_children(item){
+      let arr = this.editData.children_type.split(',');
+      let num = arr.indexOf(item);
+      arr.splice(num,1);
+      this.editData.children_type = arr.join(',');
+    },
     // 新增子类型
     add_to_children(){
+      let _this = this;
+      if(this.add_children.length == 0){
+        this.$notify.error('请输入需要添加的子类型');
+        return;
+      }
+      let arr = _this.editData.children_type.split(',')||[];
+      if(arr.includes(_this.add_children)){
+        this.$notify.error('已存在同名类型,请重新添加');
+        return;
+      }
       this.editData.children_type.length == 0?
       this.editData.children_type = this.add_children:
-      this.editData.children_type = `${this.editData.children_type} , ${this.add_children}`;
+      this.editData.children_type = `${this.editData.children_type},${this.add_children}`;
+      this.add_children = '';
     },
     // 新增或编辑
     addOrEditOne() {
+      if(this.editData.type.length==0){
+        this.$notify.error('类型不能为空');
+        return;
+      }
+      if(this.editData.typeName.length==0){
+        this.$notify.error('类型名称不能为空');
+        return;
+      }
+      // if(this.editData.type.length==0){
+      //   this.$notify.error('类型不能为空');
+      //   return;
+      // }
       if (this.type == 'add') {
         add_PT(this.editData).then(res => {
           if (res.code == 200) {
@@ -160,6 +187,7 @@ export default {
         this.editData = {
           type: '',
           typeName: '',
+          children_type:''
         }
       }
       this.dialogVisible = true;
@@ -230,15 +258,51 @@ export default {
 
 <style lang="less" scoped>
   .dialogBody{
+    .children{
+      flex: 1;
+    }
     .is_add_children{
       display: inline-block;
       background-color: aliceblue;
-      border: 1px solid black;
+      border: 1px solid rgb(206, 206, 206);
+      text-align: center;
+      height: 30px;
+      line-height: 30px;
       border-radius: 2px;
-      min-width: 60px;
+      min-width: 50px;
+      padding: 0 10px;
+      margin-top: 10px;
+      margin-right: 10px;
+      position: relative;
+      .delete_it{
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 17px;
+        width: 17px;
+        line-height: 17px;
+        background-color: white;
+        border-radius: 10px;
+        border: 1px solid rgb(163, 163, 163);
+        transform: translate(50%,-50%);
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    }
+    .is_add_children:hover{
+      .delete_it{
+        display: block;
+      }
+    }
+    .children_item{
+      display: flex;
+      flex-wrap: wrap;
+      height: auto;
     }
     .check_input{
-      width: 150px;
+      width: 250px;
     }
   }
 </style>

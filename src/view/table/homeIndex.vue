@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown class="dpd" @command="clickDRP">
+  <el-dropdown class="dpd" @command="clickDRP" trigger="click">
     <span class="el-dropdown-link">
       {{ table_name(now_table) }} 表格
     </span>
@@ -24,7 +24,7 @@ export default {
   name:"home",
   data() {
     return {
-      now_table:'city',
+      now_table:'product_type',
       query: {
         pageSize: 10,
         pageNum: 1,
