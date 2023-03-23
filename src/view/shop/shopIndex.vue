@@ -59,10 +59,16 @@ export default {
       align-items: center;
     justify-content: space-between;
     .left_btn > span{
+      display: inline-block;
       margin-right: 20px;
+      line-height: 36px;
+      height: 36px;
     }
     .right_btn > span{
+      display: inline-block;
       margin-left: 20px;
+      line-height: 36px;
+      height: 36px;
     }
     span:hover{
       color: #FF4400;
