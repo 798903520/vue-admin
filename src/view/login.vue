@@ -17,13 +17,17 @@ export default {
       login:{
         psw:"zhangc",
         name:"zhangc"
-      }
+      },
+      backUrl:''
     }
   },
   //进入组件
   activated() {
   },
   created(){
+  },
+  mounted(){
+    this.backUrl = this.$route.params.backUrl;
   },
   methods: {
     // 登录
@@ -40,7 +44,7 @@ export default {
           if(res.data.permission == 'root'){
             this.$router.push('/index');
           }
-          this.$router.push('/');
+          this.$router.push(this.backUrl);
         }else{
           this.$notify.error(res.msg);
         }

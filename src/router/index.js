@@ -117,7 +117,7 @@ const router = createRouter({
             component: () => import('../view/shop/shopIndex.vue'),
             meta: {
                 title: '商城',
-                Permission:'user,root'
+                Permission:'user,root,lang'
             }
         },
         {
@@ -139,6 +139,8 @@ router.beforeEach((to, from,next) => {
         }else{
             next()
         }
+    }else if(to.path=='/shop'){
+        next()
     }else{
         if(sessionStorage.getItem('MyToken')){
             // 权限判断
