@@ -10,8 +10,6 @@
       <el-table :data="typeList.data" border style="width: 100%" @select="handleSelecChange"
         @select-all="handleSelecChange">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column type="index" align="center" label="序号" width="70px">
-        </el-table-column>
         <el-table-column prop="typeId" align="center" label="id" width="120px">
         </el-table-column>
         <el-table-column prop="type" align="center" label="标识" width="120px">
@@ -123,6 +121,7 @@ computed:{
         this.$notify.error('请输入需要添加的子类型');
         return;
       }
+      _this.editData.children_type == null?_this.editData.children_type='':'';
       let arr = _this.editData.children_type.split(',')||[];
       if(arr.includes(_this.add_children)){
         this.$notify.error('已存在同名类型,请重新添加');
