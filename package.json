@@ -13,6 +13,7 @@
     "multiparty": "^4.2.3",
     "mysql": "^2.18.1",
     "request": "^2.88.2",
+    "swiper": "^9.1.1",
     "vue": "^3.0.4",
     "vue-router": "^4.1.5"
   },

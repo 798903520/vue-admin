@@ -41,14 +41,58 @@
         <div class="left_type">
           <span class="leftTitle">分类</span>
           <span class="goodsType" v-for="item in typeData" :key="item.type">
-          <div v-for="(i,index) in item.children_type" :key="i"><span v-if="index!=0"><strong>&nbsp;/&nbsp;</strong></span><a>{{ i }}</a></div>
-        </span>
+            <div v-for="(i, index) in item.children_type" :key="i"><span
+                v-if="index != 0"><strong>&nbsp;/&nbsp;</strong></span><a @click="jumpTypeGoods(i)">{{ i }}</a></div>
+          </span>
         </div>
         <div class="right_con">
-          <div class="content_title"></div>
+          <div class="content_title">
+            <template v-for="(item, index) in titleData" :key="index">
+              <a class="click_title"
+                :class="{ 'font_size': index < 3, 'color_change': index < 2, 'color_change1': index == 2 }">{{ item }}</a>
+              <span class="line" v-if="index != titleData.length - 1"></span>
+            </template>
+          </div>
           <div class="content_loop_mine">
-            <div class="left_loop"></div>
-            <div class="right_mine"></div>
+            <div class="left_loop">
+              <swiper :space-between="50" :modules="modules" :delay='1000' :autoplay="true" :navigation="false" :loop="true">
+                <swiper-slide><img src="../../assets/img/goods_1.jpg" alt=""></swiper-slide>
+                <swiper-slide><img src="../../assets/img/goods_2.png" alt=""></swiper-slide>
+                <swiper-slide><img src="../../assets/img/goods_3.jpg" alt=""></swiper-slide>
+              </swiper>
+            </div>
+            <div class="right_mine">
+              <div class="head">
+                <img :src="userImg" alt="">
+              </div>
+              <span>Hi!你好</span>
+              <div class="btn">
+                <span class="btn_1">登录</span>
+                <span class="btn_2">注册</span>
+                <span class="btn_3">开店</span>
+              </div>
+              <div class="user_do">
+                <div class="do_1">
+                  <img src="" alt="">
+                  <span>宝贝收藏</span>
+                </div>
+                <div class="do_2">
+                  <img src="" alt="">
+                  <span>买过的店</span>
+                </div>
+                <div class="do_3">
+                  <img src="" alt="">
+                  <span>收藏的店</span>
+                </div>
+                <div class="do_4">
+                  <img src="" alt="">
+                  <span>我的足迹</span>
+                </div>
+              </div>
+              <div class="notice">
+                zhangczhangczhangczhangc
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -59,6 +103,11 @@
 
 <script setup>
 // 引入
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import "swiper/css/navigation";
+import { Navigation,Autoplay } from "swiper";
+import 'swiper/css'
+
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import http from '../../providers/http'
@@ -66,17 +115,26 @@ import http from '../../providers/http'
 const router = useRouter();
 const route = useRoute();
 
-// 获取用户名字
+const modules = ref([Navigation,Autoplay])
+
+
 let userName = ref("");
+let userImg = ref('');
+/**
+  * 获取用户名字
+  */
 function getUserName() {
   let userData = JSON.parse(sessionStorage.getItem("userData"));
   userName.value = userData == null ? "Hi,请登录" : userData.userName;
+  userImg.value = userData == null ? import.meta.env.VITE_APP_BASE_API+'/public/img/1675755927056.png' : import.meta.env.VITE_APP_BASE_API+userData.imgPath
 }
 onMounted(() => {
   getUserName();
 });
 
-// 跳转登录
+/**
+  * 跳转登录
+  */
 function jumpLog() {
   if (userName.value == 'Hi,请登录') {
     router.push({
@@ -90,32 +148,37 @@ function jumpLog() {
   }
 }
 
-// 搜索框
 let searchKey = ref('');
+/**
+  * 搜索框
+  */
 function clickSearch() {
   console.log('123123123');
 }
 
-// 获取分类数据
+
 let typeData = ref([]);
-function getTypeData(){
+/**
+  * 获取分类数据
+  */
+function getTypeData() {
   let daa = {
-        pageSize: 10,
-        pageNum: 1,
-        typeName: '',
-      };
-  http.get('table/get_p_t_List',daa).then(res => {
-    if(res.code == 200||res.code == 304){
-      for(let item of res.data){
-        if(item.children_type){
+    pageSize: 10,
+    pageNum: 1,
+    typeName: '',
+  };
+  http.get('table/get_p_t_List', daa).then(res => {
+    if (res.code == 200 || res.code == 304) {
+      for (let item of res.data) {
+        if (item.children_type) {
           item.children_type = item.children_type.split(',');
-        }else{
+        } else {
           item.children_type = '无'
         }
       }
       typeData.value = res.data;
-    }else{
-      console.log('error request: ',res);
+    } else {
+      console.log('error request: ', res);
     }
   })
 }
@@ -123,8 +186,25 @@ onMounted(() => {
   getTypeData();
 });
 
+/**
+  * title数据
+  */
+const titleData = ref([
+  '地猫', '不划算', '地猫超市', '非法拍卖', '骑猪旅行', '偶尔特卖', '没有家', '好像直播'
+]);
 
 
+/**
+  * 点击分类
+  */
+function jumpTypeGoods(type) {
+  console.log('type', type);
+}
+
+
+/**
+  * 轮播
+  */
 </script>
 
 <style lang="less" scoped>
@@ -136,14 +216,17 @@ onMounted(() => {
   height: auto;
   min-height: 600px;
   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.02);
-  .contitle{
+
+  .contitle {
     display: flex;
   }
-  .left_type .leftTitle{
+
+  .left_type .leftTitle {
     font-size: 18px;
     font-weight: bold;
   }
-  .left_type{
+
+  .left_type {
     border-radius: 10px;
     padding: 20px;
     background-color: #f7f9fa;
@@ -151,12 +234,101 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
   }
-  .goodsType{
+
+  .goodsType {
     font-size: 14px;
     margin-top: 25px;
     font-weight: 100;
-    color: #666 ;
+    color: #666;
     display: flex;
+  }
+
+  .goodsType a:hover {
+    cursor: pointer;
+    background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .right_con {
+    margin-left: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .content_title {
+      width: 100%;
+      display: flex;
+      background-color: #f7f9fa;
+      border-radius: 10px;
+      padding: 15px 35px;
+      justify-content: space-between;
+      box-sizing: border-box;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .content_loop_mine {
+      flex: 1;
+      max-height: 350px;
+      display: flex;
+    }
+    .right_mine{
+      flex: 1;
+      margin-left: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      img{
+        width: 60px;
+        height: 60px;
+      }
+      .user_do{
+        display: flex;
+      }
+    }
+
+    .left_loop {
+      max-width: 65%;
+      width: 590px;
+      overflow: hidden;
+      background-color: #f7f9fa;
+      height: 100%;
+      border-radius: 15px;
+      img{
+        width: auto;
+        height: 100%;
+      }
+      .swiper{
+        height: 100%;
+      }
+      .swiper-wrapper{
+        height: 100%;
+      }
+    }
+
+    .line {
+      display: inline-block;
+      width: 2px;
+      height: 15px;
+      background-color: #e0e4eb;
+    }
+
+    .font_size {
+      font-weight: bold;
+    }
+
+    .color_change {
+      background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .color_change1 {
+      background: linear-gradient(45deg, rgb(0, 187, 255), rgb(7, 202, 0));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
   }
 }
 
@@ -190,6 +362,7 @@ onMounted(() => {
   }
 
   .logo {
+    user-select: none;
     text-align: right;
     line-height: 25px;
     margin: 0 80px;
