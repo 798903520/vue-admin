@@ -92,11 +92,22 @@ const router = createRouter({
                             },
                             component: () => import('../view/debug/bugIndex.vue'),
                         },
-                        // {
-                        //     path:'/game/gameNone',
-                        //     name:'摄像',
-                        //     component: () => import('../view/gameNone.vue'),
-                        // }
+                    ]
+                },
+                {
+                    path:'/tools',
+                    name:'工具',
+                    redirect: '/tools/numToZH',
+                    children:[
+                        {
+                            path:'/tools/numToZH',
+                            name:'数字转中文',
+                            meta: {
+                                title: '数字转中文',
+                                Permission:'root'
+                            },
+                            component: () => import('../view/tools/numToZH.vue'),
+                        },
                     ]
                 },
 

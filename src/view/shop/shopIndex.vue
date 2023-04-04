@@ -55,7 +55,8 @@
           </div>
           <div class="content_loop_mine">
             <div class="left_loop">
-              <swiper :space-between="50" :modules="modules" :delay='1000' :autoplay="true" :navigation="false" :loop="true">
+              <swiper :space-between="50" :modules="modules" :delay='1000' :autoplay="true" :navigation="false"
+                :loop="true">
                 <swiper-slide><img src="../../assets/img/goods_1.jpg" alt=""></swiper-slide>
                 <swiper-slide><img src="../../assets/img/goods_2.png" alt=""></swiper-slide>
                 <swiper-slide><img src="../../assets/img/goods_3.jpg" alt=""></swiper-slide>
@@ -65,32 +66,38 @@
               <div class="head">
                 <img :src="userImg" alt="">
               </div>
-              <span>Hi!你好</span>
-              <div class="btn">
+              <span class="name_hi">Hi!{{ userName == 'Hi,请登录' ? '你好' : userName }}</span>
+              <div class="btn" v-if="userName == 'Hi,请登录'">
                 <span class="btn_1">登录</span>
                 <span class="btn_2">注册</span>
                 <span class="btn_3">开店</span>
               </div>
+              <div class="my_goods_list" v-else>
+                <div class="order_type" v-for="(item, index) in orderDataType" :key="index">
+                  <span class="num">{{ data_tuype[index] }}</span>
+                  <span class="type">{{ item }}</span>
+                </div>
+              </div>
               <div class="user_do">
                 <div class="do_1">
-                  <img src="" alt="">
+                  <img src="../../assets/img/icon_shou.png" alt="">
                   <span>宝贝收藏</span>
                 </div>
                 <div class="do_2">
-                  <img src="" alt="">
+                  <img src="../../assets/img/icon_buy.png" alt="">
                   <span>买过的店</span>
                 </div>
                 <div class="do_3">
-                  <img src="" alt="">
+                  <img src="../../assets/img/icon_bussys.png" alt="">
                   <span>收藏的店</span>
                 </div>
                 <div class="do_4">
-                  <img src="" alt="">
+                  <img src="../../assets/img/icon_look.png" alt="">
                   <span>我的足迹</span>
                 </div>
               </div>
               <div class="notice">
-                zhangczhangczhangczhangc
+                <span>热点</span> <a>zhangczhangczhangczhangc</a>
               </div>
             </div>
           </div>
@@ -105,7 +112,7 @@
 // 引入
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import "swiper/css/navigation";
-import { Navigation,Autoplay } from "swiper";
+import { Navigation, Autoplay } from "swiper";
 import 'swiper/css'
 
 import { ref, onMounted } from "vue";
@@ -115,7 +122,7 @@ import http from '../../providers/http'
 const router = useRouter();
 const route = useRoute();
 
-const modules = ref([Navigation,Autoplay])
+const modules = ref([Navigation, Autoplay])
 
 
 let userName = ref("");
@@ -126,7 +133,7 @@ let userImg = ref('');
 function getUserName() {
   let userData = JSON.parse(sessionStorage.getItem("userData"));
   userName.value = userData == null ? "Hi,请登录" : userData.userName;
-  userImg.value = userData == null ? import.meta.env.VITE_APP_BASE_API+'/public/img/1675755927056.png' : import.meta.env.VITE_APP_BASE_API+userData.imgPath
+  userImg.value = userData == null ? import.meta.env.VITE_APP_BASE_API + '/public/img/1675755927056.png' : import.meta.env.VITE_APP_BASE_API + userData.imgPath
 }
 onMounted(() => {
   getUserName();
@@ -191,6 +198,19 @@ onMounted(() => {
   */
 const titleData = ref([
   '地猫', '不划算', '地猫超市', '非法拍卖', '骑猪旅行', '偶尔特卖', '没有家', '好像直播'
+]);
+
+/**
+  * 订单数据
+  */
+const orderDataType = ref([
+  '购物车', '待收货', '待发货', '待付款', '待评价'
+]);
+/**
+  * 模拟获取的数据
+  */
+const data_tuype = ref([
+  23, 1, 0, 0, 3
 ]);
 
 
@@ -273,18 +293,119 @@ function jumpTypeGoods(type) {
       max-height: 350px;
       display: flex;
     }
-    .right_mine{
+
+    .right_mine {
       flex: 1;
-      margin-left: 15px;
+      margin-left: 25px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      img{
+      text-align: center;
+
+      .head {
+        margin-top: 20px;
+      }
+
+      .name_hi {
+        font-weight: bold;
+      }
+
+      .head img {
         width: 60px;
         height: 60px;
+        background-color: whitesmoke;
+        border-radius: 30px;
       }
-      .user_do{
+
+      .user_do img {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 10px;
+      }
+
+      .user_do>div {
         display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .user_do {
+        display: flex;
+        font-size: 13px;
+        justify-content: space-between;
+      }
+
+      .notice {
+        text-align: left;
+        font-size: 13px;
+      }
+
+      .notice span {
+        display: inline-block;
+        color: white;
+        padding: 2px 4px;
+        border-radius: 4px;
+        background-image: linear-gradient(to right, rgb(253, 161, 255), rgb(0, 187, 255));
+      }
+
+      .btn {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .btn span {
+        display: block;
+        height: 40px;
+        line-height: 40px;
+        width: 80px;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .btn .btn_2 {
+        background-image: linear-gradient(to right, rgb(253, 161, 255), rgb(0, 187, 255));
+      }
+
+      .btn .btn_1 {
+        background-image: linear-gradient(to right, rgb(251, 14, 255), #72d9ff);
+      }
+
+      .btn .btn_3 {
+        color: #a000a5;
+        border: 1px solid #e91bf0;
+      }
+
+      .my_goods_list {
+        height: 40px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .order_type {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .order_type:hover {
+        cursor: pointer;
+        background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .order_type .num {
+        font-size: 16px;
+        font-weight: bold;
+        background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .order_type .type {
+        font-size: 13px;
       }
     }
 
@@ -295,14 +416,17 @@ function jumpTypeGoods(type) {
       background-color: #f7f9fa;
       height: 100%;
       border-radius: 15px;
-      img{
+
+      img {
         width: auto;
         height: 100%;
       }
-      .swiper{
+
+      .swiper {
         height: 100%;
       }
-      .swiper-wrapper{
+
+      .swiper-wrapper {
         height: 100%;
       }
     }
