@@ -40,9 +40,12 @@
       <div class="contitle">
         <div class="left_type">
           <span class="leftTitle">分类</span>
-          <span class="goodsType" v-for="item in typeData" :key="item.type">
-            <div v-for="(i, index) in item.children_type" :key="i"><span
+          <span class="goodsType" v-for="(item,idx) in typeData" :key="item.type">
+            <temppate v-if="idx<8">
+              <div class="type_child" v-for="(i, index) in item.children_type" :key="i"><span
                 v-if="index != 0"><strong>&nbsp;/&nbsp;</strong></span><a @click="jumpTypeGoods(i)">{{ i }}</a></div>
+            </temppate>
+            
           </span>
         </div>
         <div class="right_con">
@@ -257,10 +260,13 @@ function jumpTypeGoods(type) {
 
   .goodsType {
     font-size: 14px;
-    margin-top: 25px;
     font-weight: 100;
     color: #666;
     display: flex;
+  }
+
+  .type_child{
+    margin-top: 25px;
   }
 
   .goodsType a:hover {
