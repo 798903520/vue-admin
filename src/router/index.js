@@ -124,7 +124,7 @@ const router = createRouter({
         },
         {
             path: '/shop',
-            name:'商城',
+            name:'shop',
             component: () => import('../view/shop/shopIndex.vue'),
             meta: {
                 title: '商城',

@@ -27,7 +27,7 @@ export default {
   created(){
   },
   mounted(){
-    this.backUrl = this.$route.params.backUrl;
+    this.backUrl = this.$route.query.backUrl;
   },
   methods: {
     // 登录
@@ -43,8 +43,9 @@ export default {
           this.$notify.success(res.msg);
           if(res.data.permission == 'root'){
             this.$router.push('/index');
+          }else{
+            this.$router.push(this.backUrl);
           }
-          this.$router.push(this.backUrl);
         }else{
           this.$notify.error(res.msg);
         }

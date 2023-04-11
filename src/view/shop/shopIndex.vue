@@ -40,8 +40,8 @@
       <div class="contitle">
         <div class="left_type">
           <span class="leftTitle">分类</span>
-          <span class="goodsType" v-for="item in typeData" :key="item.type">
-            <div v-for="(i, index) in item.children_type" :key="i"><span
+          <span class="goodsType" v-for="(item,idx) in typeData" :key="item.type">
+            <div class="children_type" v-for="(i, index) in item.children_type" v-if="idx<8" :key="i"><span
                 v-if="index != 0"><strong>&nbsp;/&nbsp;</strong></span><a @click="jumpTypeGoods(i)">{{ i }}</a></div>
           </span>
         </div>
@@ -68,7 +68,7 @@
               </div>
               <span class="name_hi">Hi!{{ userName == 'Hi,请登录' ? '你好' : userName }}</span>
               <div class="btn" v-if="userName == 'Hi,请登录'">
-                <span class="btn_1">登录</span>
+                <span @click="jumpLog()" class="btn_1">登录</span>
                 <span class="btn_2">注册</span>
                 <span class="btn_3">开店</span>
               </div>
@@ -111,6 +111,9 @@
 <script setup>
 // 引入
 import { Swiper, SwiperSlide } from 'swiper/vue'
+// 组件
+import { getCurrentInstance } from 'vue' 
+import { ElNotification } from 'element-plus'
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper";
 import 'swiper/css'
@@ -142,16 +145,24 @@ onMounted(() => {
 /**
   * 跳转登录
   */
+ let {ctx:that} = getCurrentInstance();
 function jumpLog() {
   if (userName.value == 'Hi,请登录') {
     router.push({
-      name: 'loginIt',
-      params: {
+      path: '/loginIt',
+      query: {
         backUrl: 'shop'
       }
     });
   } else {
-    console.log('userName', userName.value);
+    sessionStorage.removeItem('MyToken');
+    sessionStorage.removeItem('userData');
+    ElNotification({
+      type:'success',
+      message:'成功退出!'
+    });
+    userName.value= 'Hi,请登录';
+    that.$forceUpdate();
   }
 }
 
@@ -257,7 +268,6 @@ function jumpTypeGoods(type) {
 
   .goodsType {
     font-size: 14px;
-    margin-top: 25px;
     font-weight: 100;
     color: #666;
     display: flex;
@@ -268,6 +278,9 @@ function jumpTypeGoods(type) {
     background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
     -webkit-background-clip: text;
     color: transparent;
+  }
+  .goodsType .children_type{
+    margin-top: 25px;
   }
 
   .right_con {
@@ -505,12 +518,12 @@ function jumpTypeGoods(type) {
   @keyframes up_done {
     0% {
       margin-top: 0;
-      text-shadow: 10px 0px 10px rgba(0, 0, 0, 0.15);
+      text-shadow: 10px 0px 0px rgba(0, 0, 0, 0.15);
     }
 
     100% {
       margin-top: -15px;
-      text-shadow: 10px -20px 15px rgba(0, 0, 0, 0.08);
+      text-shadow: 15px 0px 5px rgba(0, 0, 0, 0.08);
     }
   }
 }

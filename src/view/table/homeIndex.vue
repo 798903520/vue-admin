@@ -9,13 +9,15 @@
         <el-dropdown-item command="product_type" divided>商品类型</el-dropdown-item>
         <el-dropdown-item command="product_business" divided>商家</el-dropdown-item>
         <el-dropdown-item command="product" divided>商品</el-dropdown-item>
+        <el-dropdown-item command="order" divided>订单</el-dropdown-item>
+        <el-dropdown-item command="Roles" divided>角色</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
   <city v-if="now_table == 'city'"></city>
-  <product_type v-if="now_table == 'product_type'"></product_type>
-  <product_business v-if="now_table == 'product_business'"></product_business>
-  <product v-if="now_table == 'product'"></product>
+  <product_type v-else-if="now_table == 'product_type'"></product_type>
+  <product_business v-else-if="now_table == 'product_business'"></product_business>
+  <product v-else-if="now_table == 'product'"></product>
 </template>
 
 <script>
@@ -24,7 +26,7 @@ export default {
   name:"home",
   data() {
     return {
-      now_table:'product_type',
+      now_table:'product_business',
       query: {
         pageSize: 10,
         pageNum: 1,
