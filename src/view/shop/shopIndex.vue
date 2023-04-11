@@ -273,6 +273,10 @@ function jumpTypeGoods(type) {
     display: flex;
   }
 
+  .type_child{
+    margin-top: 25px;
+  }
+
   .goodsType a:hover {
     cursor: pointer;
     background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
