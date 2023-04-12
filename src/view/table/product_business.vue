@@ -10,12 +10,14 @@
       <el-table :data="typeList.data" border style="width: 100%" @select="handleSelecChange"
         @select-all="handleSelecChange">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column prop="typeId" align="center" label="id" width="120px">
+        <el-table-column prop="p_b_id" align="center" label="商家id" width="120px">
         </el-table-column>
-        <el-table-column prop="type" align="center" label="标识" width="120px">
+        <el-table-column prop="type" align="center" label="子类型标识" width="120px">
         </el-table-column>
-        <el-table-column prop="typeName" align="center" label="类型名称"> </el-table-column>
-        <el-table-column prop="children_type" align="center" label="子类型"> </el-table-column>
+        <el-table-column prop="NAME" align="center" label="商家名称"> </el-table-column>
+        <el-table-column prop="fans" align="center" label="收藏粉丝"> </el-table-column>
+        <el-table-column prop="content" align="center" label="商家说明"> </el-table-column>
+        <el-table-column prop="createTime" align="center" label="入驻时间"></el-table-column>
         <el-table-column label="操作" align="center" width="200">
           <template #default="scope">
             <el-button text type="primary" @click="addORedit(scope.row.typeId)">编辑</el-button>
@@ -33,14 +35,30 @@
     <el-dialog :title="title" v-model="dialogVisible" width="600px" :before-close="dialogBeforeClose">
       <div class="dialogBody">
         <div class="item">
-          <span class="leftLabel"> 类型 </span>
+          <span class="leftLabel"> 展示头像 </span>
+          <upload_img />
+        </div>
+        <div class="item">
+          <span class="leftLabel"> 子类型标识 </span>
           <el-input v-model="editData.type" placeholder="选择类型"></el-input>
         </div>
         <div class="item">
-          <span class="leftLabel"> 类型名称 </span>
-          <el-input v-model="editData.typeName" placeholder="输入类型名称"></el-input>
+          <span class="leftLabel"> 商家名称 </span>
+          <el-input v-model="editData.NAME" placeholder="选择类型"></el-input>
         </div>
         <div class="item">
+          <span class="leftLabel"> 商家说明 </span>
+          <el-input type="textarea" v-model="editData.content" placeholder="选择类型"></el-input>
+        </div>
+        <div class="item">
+          <span class="leftLabel"> 收藏粉丝 </span>
+          <el-input v-model="editData.fans" placeholder="收藏粉丝"></el-input>
+        </div>
+        <!-- <div class="item">
+          <span class="leftLabel"> 入住时间 </span>
+          <el-input v-model="editData.type" placeholder="选择类型"></el-input>
+        </div> -->
+        <!-- <div class="item">
           <span class="leftLabel"> 子类型 </span>
           <div class="children">
             <el-input class="check_input" v-model="add_children" @keyup.enter="add_to_children()" placeholder="输入新增类型名称">
@@ -55,7 +73,7 @@
               </span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="footer" slot="footer">
         <el-button size="large" @click="dialogVisible = false">取 消</el-button>
@@ -65,12 +83,13 @@
   </div>
 </template>
 <script setup>
+import upload_img from '../compolents/upload_image.vue'
 const props = defineProps({
   now_table: String
 })
-
 </script>
 <script>
+import { isEmpty } from '../../js/jsFun.js';
 import http from '../../providers/http';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { get_p_t_List, get_p_t_Data, add_PT, edit_PT, delete_p_t } from "../../api";
@@ -79,6 +98,7 @@ export default {
 
   data() {
     return {
+      baseUrl:import.meta.env.VITE_APP_BASE_API,
       query: {
         pageSize: 10,
         pageNum: 1,
@@ -91,9 +111,15 @@ export default {
       dialogVisible: false,
       add_children:'',
       editData:{
+        p_b_id: '',
         type: '',
-        typeName: '',
-        children_type: ''
+        NAME: '',
+        fans:'',
+        content:'',
+        createTime:'',
+        headImgPath:'',
+        fans:'',
+        
       }
     };
   },
@@ -259,6 +285,10 @@ computed:{
 
 <style lang="less" scoped>
   .dialogBody{
+    .headImg{
+      width: 60px;
+      height: 60px;
+    }
     .children{
       flex: 1;
     }

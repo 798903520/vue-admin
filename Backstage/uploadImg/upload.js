@@ -14,9 +14,6 @@ router.post('/uploadImg', function (req, res) {
 
     let form = new multiparty.Form();
     form.parse(req,(err, fields, files) => {
-        console.log(fields.name[0],fields.content[0])
-        // let name = fields.name[0];
-        // let content = fields.content[0];
         let base64Data = fields.blobFile[0].replace(/^data:image\/\w+;base64,/, "");
         let dataBuffer = new Buffer.from(base64Data, 'base64');
         let id = utils.ramdomNum() + utils.nowTime();

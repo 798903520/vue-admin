@@ -7,7 +7,7 @@ let connection = require('../sql.js')
     connection.init();
     connection.connect();
     let sql = `SELECT * FROM p_business ${queryData.typeName.length==0?'':'where typeName like "%'+queryData.typeName+'%"'} limit ${queryData.pageNum.length==0?'0':(queryData.pageNum-1)*queryData.pageSize},${queryData.pageSize.length==0?'10':queryData.pageSize};`;
-    let sql2 = `select count(*) as total from p_type ${queryData.typeName?'where typeName like "%'+queryData.typeName+'%"':''};`
+    let sql2 = `select count(*) as total from p_business ${queryData.typeName?'where typeName like "%'+queryData.typeName+'%"':''};`
     // 查询
     let p1 = connection.query(sql)
     let p2 = connection.query(sql2);
