@@ -57,7 +57,7 @@ create table p_type (
 //创建商家表
 create table p_business (
     type varchar (24) NOT NULL,
-    p_b_id varchar (64) NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    p_b_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name varchar (64) NOT NULL,
     fans varchar(255),
     content varchar(200),
