@@ -33,7 +33,7 @@ router.get('/get_p_b_Data', function (req, res) {
   let connection = require('../sql.js')
     connection.init();
     connection.connect();
-    let sql = `SELECT * FROM p_type where city_id = '${queryData.id}'`;
+    let sql = `SELECT * FROM p_business where p_b_id = '${queryData.p_b_id}'`;
     // 查询
     connection.query(sql).then(response => {
       res.send({
@@ -59,13 +59,13 @@ router.post('/add_PB', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `INSERT INTO city (city_id,city,country_id,last_update) values ("${data.city_id}","${data.city}","${data.country_id}","${data.last_update}")`;
+  let sql = `INSERT INTO p_business (NAME,type,fans,content,headImgPath) values ("${data.name}","${data.type}","${data.fans}","${data.content}","${data.headImgPath}")`;
   console.log('sql',sql);
   connection.query(sql).then(rsb => {
-    res.send({ code: '200', token: 'zhangc', msg: '新增成功' });
+    res.send({ code: '200', msg: '新增成功' });
   }).catch(rsb => {
     console.log('error', rsb);
-    res.send({ code: '2300', token: 'zhangc', msg: '新增失败，请联系管理员' });
+    res.send({ code: '2300', msg: '新增失败，请联系管理员' });
 
   });
   connection.close();
@@ -77,12 +77,12 @@ router.post('/edit_PB', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `UPDATE city set city = "${req.body.city}" where city_id = ${req.body.city_id}`;
+  let sql = `UPDATE p_business set NAME = "${req.body.name}",type = "${req.body.type}",fans = "${req.body.fans}",content = "${req.body.content}",headImgPath = "${req.body.headImgPath}" where p_b_id = ${req.body.p_b_id}`;
   connection.query(sql).then(rsb => {
-    res.send({ code: '200', token: 'zhangc', msg: '修改成功' });
+    res.send({ code: '200', msg: '修改成功' });
   }).catch(rsb => {
     console.log('error', rsb);
-    res.send({ code: '2300', token: 'zhangc', msg: '修改失败，请联系管理员' });
+    res.send({ code: '2300', msg: '修改失败，请联系管理员' });
 
   });
   connection.close();

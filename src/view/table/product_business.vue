@@ -14,14 +14,14 @@
         </el-table-column>
         <el-table-column prop="type" align="center" label="子类型标识" width="120px">
         </el-table-column>
-        <el-table-column prop="NAME" align="center" label="商家名称"> </el-table-column>
+        <el-table-column prop="name" align="center" label="商家名称"> </el-table-column>
         <el-table-column prop="fans" align="center" label="收藏粉丝"> </el-table-column>
         <el-table-column prop="content" align="center" label="商家说明"> </el-table-column>
         <el-table-column prop="createTime" align="center" label="入驻时间"></el-table-column>
         <el-table-column label="操作" align="center" width="200">
           <template #default="scope">
-            <el-button text type="primary" @click="addORedit(scope.row.typeId)">编辑</el-button>
-            <el-button text type="primary" @click="deleteMoreAndOne(scope.row.typeId)">删除</el-button>
+            <el-button text type="primary" @click="addORedit(scope.row.p_b_id)">编辑</el-button>
+            <el-button text type="primary" @click="deleteMoreAndOne(scope.row.p_b_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -32,11 +32,11 @@
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog :title="title" v-model="dialogVisible" width="600px" :before-close="dialogBeforeClose">
+    <el-dialog :title="title" v-if="dialogVisible" v-model="dialogVisible" width="600px" :close-on-click-modal="false" :close-on-press-escape="false" :before-close="dialogBeforeClose">
       <div class="dialogBody">
         <div class="item">
           <span class="leftLabel"> 展示头像 </span>
-          <upload_img />
+          <upload_img @imgPath="givePath" :imgPath="editData.headImgPath"/>
         </div>
         <div class="item">
           <span class="leftLabel"> 子类型标识 </span>
@@ -44,7 +44,7 @@
         </div>
         <div class="item">
           <span class="leftLabel"> 商家名称 </span>
-          <el-input v-model="editData.NAME" placeholder="选择类型"></el-input>
+          <el-input v-model="editData.name" placeholder="选择类型"></el-input>
         </div>
         <div class="item">
           <span class="leftLabel"> 商家说明 </span>
@@ -113,12 +113,11 @@ export default {
       editData:{
         p_b_id: '',
         type: '',
-        NAME: '',
+        name: '',
         fans:'',
         content:'',
         createTime:'',
         headImgPath:'',
-        fans:'',
         
       }
     };
@@ -128,12 +127,16 @@ export default {
     this.searchList();
   },
 computed:{
-  children_group(){
-    let is = this.editData.children_type == null||this.editData.children_type.length == 0;
-    return is?[]:this.editData.children_type.split(',');
-  },
+  // children_group(){
+  //   let is = this.editData.children_type == null||this.editData.children_type.length == 0;
+  //   return is?[]:this.editData.children_type.split(',');
+  // },
 },
   methods: {
+    // 
+    givePath(data){
+      this.editData.headImgPath = data;
+    },
     // 删除子类型
     delete_children(item){
       let arr = this.editData.children_type.split(',');
@@ -165,16 +168,8 @@ computed:{
         this.$notify.error('类型不能为空');
         return;
       }
-      if(this.editData.typeName.length==0){
-        this.$notify.error('类型名称不能为空');
-        return;
-      }
-      // if(this.editData.type.length==0){
-      //   this.$notify.error('类型不能为空');
-      //   return;
-      // }
       if (this.type == 'add') {
-        add_PT(this.editData).then(res => {
+        http.post('/table/add_PB',this.editData).then(res => {
           if (res.code == 200) {
             this.$notify.success('新增成功');
           } else {
@@ -185,7 +180,7 @@ computed:{
         });
       }
       else {
-        edit_PT(this.editData).then(res => {
+        http.post('/table/edit_PB',this.editData).then(res => {
           if (res.code == 200) {
             this.$notify.success('编辑成功');
           } else {
@@ -201,19 +196,25 @@ computed:{
       this.dialogVisible = false;
     },
     // 打开弹窗
-    addORedit(type) {
+    async addORedit(type) {
       this.type = type;
+      let _this = this;
       if (this.type != "add") {
-        get_p_t_Data({ typeId: type }).then((res) => {
+        await http.get('/table/get_p_b_Data',{ p_b_id: type }).then((res) => {
           if (res.code == 200) {
-            this.editData = res.data;
+            _this.editData = res.data;
           }
         });
       } else {
-        this.editData = {
-          type: '',
-          typeName: '',
-          children_type:''
+        _this.editData = {
+          p_b_id: '',
+        type: '',
+        name: '',
+        fans:'',
+        content:'',
+        createTime:'',
+        headImgPath:'',
+        fans:'',
         }
       }
       this.dialogVisible = true;

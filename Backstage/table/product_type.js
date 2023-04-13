@@ -65,7 +65,7 @@ router.post('/add_PT', function (req, res) {
     res.send({ code: '200', msg: '新增成功' });
   }).catch(rsb => {
     console.log('error', rsb);
-    res.send({ code: '2300', token: 'zhangc', msg: '新增失败，请联系管理员' });
+    res.send({ code: '2300',  msg: '新增失败，请联系管理员' });
 
   });
   connection.close();
@@ -79,10 +79,10 @@ router.post('/edit_PT', function (req, res) {
   connection.connect();
   let sql = `UPDATE p_type set type = "${req.body.type}",typeName = "${req.body.typeName}",children_type = "${req.body.children_type}" where typeId = ${req.body.typeId}`;
   connection.query(sql).then(rsb => {
-    res.send({ code: '200', token: 'zhangc', msg: '修改成功' });
+    res.send({ code: '200', msg: '修改成功' });
   }).catch(rsb => {
     console.log('error', rsb);
-    res.send({ code: '2300', token: 'zhangc', msg: '修改失败，请联系管理员' });
+    res.send({ code: '2300', msg: '修改失败，请联系管理员' });
 
   });
   connection.close();
@@ -98,10 +98,10 @@ router.post('/delete_PT', function (req, res) {
   let sql = `delete from p_type where typeId in (${req.body.ids})`;
   console.log('sql',sql);
   connection.query(sql).then(rsb => {
-    res.send({ code: '200', token: 'zhangc', msg: '删除成功' });
+    res.send({ code: '200',  msg: '删除成功' });
   }).catch(rsb => {
     console.log('error', rsb);
-    res.send({ code: '2300', token: 'zhangc', msg: '删除失败，请联系管理员' });
+    res.send({ code: '2300',  msg: '删除失败，请联系管理员' });
 
   });
   connection.close();
