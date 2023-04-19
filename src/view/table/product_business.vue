@@ -17,7 +17,7 @@
         <el-table-column prop="name" align="center" label="商家名称"> </el-table-column>
         <el-table-column prop="content" align="center" label="商家说明"> </el-table-column>
         <el-table-column prop="fans" align="center" label="收藏粉丝">
-          <template scope>{{ isEmpty(scope.row.fans)?0:scope.row.fans }}</template>  
+          <template v-slot="scope">{{ isEmpty(scope.row.fans)?0:scope.row.fans }}</template>  
         </el-table-column>
         <el-table-column prop="createTime" align="center" label="入驻时间"></el-table-column>
         <el-table-column label="操作" align="center" width="200">

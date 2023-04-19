@@ -68,12 +68,14 @@ create table p_business (
 create table product (
     type varchar (24) NOT NULL,
     p_b_id varchar (64) NOT NULL,
-    product_id varchar (64) NOT NULL UNIQUE PRIMARY KEY,
+    product_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name varchar (64) NOT NULL,
     content varchar(200),
     imgPaths varchar(255),
     surplus varchar(64),
     color varchar(144),
+    size varchar(144),
+    price varchar(144),
     create_product_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
 )
 ```

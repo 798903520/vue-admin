@@ -2,7 +2,7 @@
   <div>
     <div class="tiitle">输入数字,点击按钮,会将数字转换成中文读法<br>(支持万亿以下)</div>
     <div class="tiptop">
-      <el-input :maxlength="12" clearable  class="input_width" type="text" v-model="ZHKey"></el-input>
+      <el-input :maxlength="12" clearable  class="input_width" type="text" onkeyup="value=value.replace(/\D/g,'')" v-model.trim="ZHKey"></el-input>
       <el-button @click="submitIt(ZHKey)">转换</el-button>
     </div>
     <div class="chage" v-if="beforChange.length>0">转换后 : {{ beforChange }}</div>

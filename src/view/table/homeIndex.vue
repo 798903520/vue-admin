@@ -26,7 +26,7 @@ export default {
   name:"home",
   data() {
     return {
-      now_table:'product_business',
+      now_table:'product',
       query: {
         pageSize: 10,
         pageNum: 1,

@@ -10,3 +10,10 @@ export default {
   }
 }
 </script>
+
+<script setup>
+// 调整窗口大小时刷新页面
+  window.onresize = function(){
+    location.reload();
+  }
+</script>

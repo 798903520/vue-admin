@@ -357,8 +357,6 @@ var loopData = {
 .headBtn{
   height: 100%;
   display: flex;
-  .rightContent{
-  }
   .left{
     flex: 1;
     display: flex;
