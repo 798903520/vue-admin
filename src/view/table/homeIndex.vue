@@ -8,7 +8,7 @@
         <el-dropdown-item command="city">城市</el-dropdown-item>
         <el-dropdown-item command="product_type" divided>商品类型</el-dropdown-item>
         <el-dropdown-item command="product_business" divided>商家</el-dropdown-item>
-        <el-dropdown-item command="product" divided>商品</el-dropdown-item>
+        <!-- <el-dropdown-item command="product" divided>商品</el-dropdown-item> -->
         <el-dropdown-item command="order" divided>订单</el-dropdown-item>
         <el-dropdown-item command="Roles" divided>角色</el-dropdown-item>
       </el-dropdown-menu>
@@ -26,7 +26,7 @@ export default {
   name:"home",
   data() {
     return {
-      now_table:'product',
+      now_table:'product_business',
       query: {
         pageSize: 10,
         pageNum: 1,

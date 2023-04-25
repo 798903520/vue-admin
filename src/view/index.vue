@@ -8,7 +8,7 @@
     </div>
     <div class="right">
       <div class="top">
-        <nav1></nav1>
+        <headTop></headTop>
       </div>
       <div class="content-all">
         <div class="content">
@@ -21,12 +21,12 @@
 
 <script>
 import menuList from "../components/menu.vue"
-import nav from "../components/nav.vue"
+import headTop from "../components/nav.vue"
 export default {
   name: "index",
   components:{
     menuList:menuList,
-    nav1:nav
+    headTop:headTop
   }
 }
 </script>

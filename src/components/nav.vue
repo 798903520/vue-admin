@@ -1,5 +1,5 @@
 <template>
-<div class="nav">
+<div class="nav1">
   <img class="m_convex" :src="url+name.imgPath" title="点击上传头像" alt="无">
   <span>{{name.userName}}</span>
 </div>
@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "nav",
+  name: "nav1",
 }
 </script>
 <script setup>
@@ -16,7 +16,7 @@ const url = import.meta.env.VITE_APP_BASE_API;
 </script>
 
 <style scoped lang="less">
-.nav{
+.nav1{
   height: 100%;
   width: calc(100% - 20px);
   display: flex;

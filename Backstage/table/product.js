@@ -6,7 +6,7 @@ router.get('/get_p_List', function (req, res) {
 let connection = require('../sql.js')
     connection.init();
     connection.connect();
-    let sql = `SELECT * FROM product ${queryData.name.length==0?'':'where name like "%'+queryData.name+'%"'} limit ${queryData.pageNum.length==0?'0':(queryData.pageNum-1)*queryData.pageSize},${queryData.pageSize.length==0?'10':queryData.pageSize};`;
+    let sql = `SELECT * FROM product where ${queryData.name.length==0?'':'name like "%'+queryData.name+'%" and '} p_b_id =  ${queryData.p_b_id};`;
     let sql2 = `select count(*) as total from product ${queryData.name?'where name like "%'+queryData.name+'%"':''};`
     // 查询
     let p1 = connection.query(sql)

@@ -3,7 +3,7 @@
     <div class="headder">
       <el-input clearable class="search" v-model="query.name" placeholder="输入类型"></el-input>
       <el-button size="large" type="primary" @click="searchList">搜索</el-button>
-      <el-button size="large" type="primary" @click="addORedit('add')" plain>新增</el-button>
+      <el-button size="large" type="primary" @click="addORedit('add')" plain>新增商家</el-button>
       <el-button size="large" type="primary" @click="deleteMoreAndOne()" plain>批量删除</el-button>
     </div>
     <div class="tables">
@@ -19,11 +19,12 @@
         <el-table-column prop="fans" align="center" label="收藏粉丝">
           <template v-slot="scope">{{ isEmpty(scope.row.fans)?0:scope.row.fans }}</template>  
         </el-table-column>
-        <el-table-column prop="createTime" align="center" label="入驻时间"></el-table-column>
-        <el-table-column label="操作" align="center" width="200">
+        <el-table-column prop="createTime" width="200" align="center" label="入驻时间"></el-table-column>
+        <el-table-column label="操作" align="center" width="auto">
           <template #default="scope">
-            <el-button text type="primary" @click="addORedit(scope.row.p_b_id)">编辑</el-button>
-            <el-button text type="primary" @click="deleteMoreAndOne(scope.row.p_b_id)">删除</el-button>
+            <el-button link type="primary" @click="addORedit(scope.row.p_b_id)">编辑</el-button>
+            <el-button link type="primary" @click="openbusinessgoods(scope.row)">当前商品</el-button>
+            <el-button link type="primary" @click="deleteMoreAndOne(scope.row.p_b_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -32,6 +33,9 @@
         :total="Number(typeList.total)">
       </el-pagination>
     </div>
+
+    <!-- 商品弹窗 -->
+    <goods_dialog :isOpen="isOpen" :b_id="b_id" @close="closeDia"></goods_dialog>
 
     <!-- 弹窗 -->
     <el-dialog :title="title" v-if="dialogVisible" v-model="dialogVisible" width="600px" :close-on-click-modal="false"
@@ -89,9 +93,20 @@
 </template>
 <script setup>
 import upload_img from '../compolents/upload_image.vue'
+import goods_dialog from './product_business_goods_dialog.vue'; 
+import { ref } from 'vue';
 const props = defineProps({
   now_table: String
 })
+const isOpen = ref(false);
+const b_id = ref({});//传递的数据
+function openbusinessgoods(data){
+  b_id.value = data;
+  isOpen.value = true;
+}
+function closeDia(){
+  isOpen.value = false;
+}
 </script>
 <script>
 import { isEmpty } from '../../js/jsFun.js';

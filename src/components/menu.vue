@@ -1,6 +1,6 @@
 <template>
       <el-menu
-          class="el-menu-vertical-demo menu"
+          class="el-menu-vertical-demo menu1"
           router
           :unique-opened="true"
       >
@@ -19,7 +19,7 @@
 <script>
 // import { useRouter, useRoute } from "vue-router"
 export default {
-  name: "menu",
+  name: "menu1",
   data(){
     return{
     }
@@ -43,7 +43,7 @@ const router = route.matched[0].children;
 </script>
 
 <style scoped lang="less">
-.menu{
+.menu1{
   height: 100%;
   width: calc(100% - 1px);
   overflow-x: hidden;
