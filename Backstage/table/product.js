@@ -59,7 +59,7 @@ router.post('/add_P', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `INSERT INTO product (city_id,city,country_id,last_update) values ("${data.city_id}","${data.city}","${data.country_id}","${data.last_update}")`;
+  let sql = `INSERT INTO product (color,content,imgPaths,name,p_b_id,price,size,type) values ("${data.color}","${data.content}","${data.imgPaths}","${data.name}","${data.p_b_id}","${data.price}","${data.size}","${data.type}")`;
   console.log('sql',sql);
   connection.query(sql).then(rsb => {
     res.send({ code: '200', token: 'zhangc', msg: '新增成功' });
