@@ -55,7 +55,6 @@ function add_to_children() {
 }
 // 删除子类型
 function delete_children(item) {
-  console.log('item', item);
   let arr = props.fatherData.split(',');
   let num = arr.indexOf(item);
   arr.splice(num, 1);
@@ -65,8 +64,10 @@ function delete_children(item) {
 }
 // 监听传递的prop
 watch(() => props.fatherData, (newV, oldV) => {
-  let is = newV == null || newV.length == 0;
+  let is = (newV == null || newV.length == 0);
   children_group.value = is ? [] : newV.split(',');
+},{
+  immediate:true
 });
 </script>
 

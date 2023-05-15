@@ -11,9 +11,11 @@
         <el-form-item>
           <el-button @click="getData(props.b_id.p_b_id)">搜索</el-button>
           <el-button @click="new_goods()">新增商品</el-button>
+          <el-button @click="deleteMoreAndOne()">批量删除</el-button>
         </el-form-item>
       </el-form>
-      <el-table border :data="goods_list.data">
+      <el-table border :data="goods_list.data" @select="handleSelecChange" @select-all="handleSelecChange">
+        <el-table-column type="selection"></el-table-column>
         <el-table-column label="id" prop="product_id"></el-table-column>
         <el-table-column label="名称" prop="name"></el-table-column>
         <el-table-column label="规格" prop="size"></el-table-column>
@@ -22,8 +24,11 @@
         <el-table-column label="价格" prop="price"></el-table-column>
         <el-table-column label="图片" prop="imgPaths"></el-table-column>
         <el-table-column width="200" label="创建时间" prop="create_product_time"></el-table-column>
-        <el-table-column width="200" label="操作" >
-          
+        <el-table-column width="200" label="操作">
+          <template #default="scope">
+            <el-button link type="primary" @click="editOne(scope.row.product_id)">编辑</el-button>
+            <el-button link type="primary" @click="deleteMoreAndOne(scope.row.product_id)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -45,11 +50,11 @@
       <div class="item">
         <span class="leftLabel"> 商品规格 </span>
         <!-- <el-input v-model="addData.size"></el-input> -->
-        <addChildrenType :fatherData="addData.size" @getSunData="getSunData_size" /> 
+        <addChildrenType :fatherData="addData.size" @getSunData="getSunData_size" />
       </div>
       <div class="item">
         <span class="leftLabel"> 商品颜色 </span>
-        <addChildrenType :fatherData="addData.color" @getSunData="getSunData_color" /> 
+        <addChildrenType :fatherData="addData.color" @getSunData="getSunData_color" />
       </div>
       <div class="item">
         <span class="leftLabel"> 商品介绍 </span>
@@ -63,7 +68,7 @@
       <div class="item">
         <span class="leftLabel"> 商品图片 </span>
         <!-- <el-input v-model="addData.imgPaths"></el-input> -->
-        <uploadImage :imgPath="addData.imgPaths" @imgPath="givePath"/>
+        <uploadImage :imgPath="addData.imgPaths" @imgPath="givePath" />
       </div>
     </div>
     <div class="footer" slot="footer">
@@ -75,7 +80,7 @@
 
 <script setup>
 import http from '../../providers/http';
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessageBox } from 'element-plus'
 import { ref, watch, computed, defineEmits } from 'vue';
 import addChildrenType from '../compolents/add_children_type.vue';
 import uploadImage from '../compolents/upload_image.vue';
@@ -112,6 +117,7 @@ const title = ref('');
 // 监听传递的prop
 watch(() => props.b_id, (newV, oldV) => {
   getData(newV.p_b_id);
+  // 初始值
   addData.value.p_b_id = newV.p_b_id;
   addData.value.type = newV.type;
   title.value = newV.name;
@@ -123,34 +129,127 @@ function closeIt() {
 }
 
 // 弹窗开关
+let editId = '';
+
 const addOne = ref(false);
 function new_goods() {
   addOne.value = true;
 }
-function closeOne() {
+function editOne(id) {
+  editId = '' + id;
+  // 获取编辑的数据
+  http.get('/table/get_p_Data?product_id=' + id).then(res => {
+    if (res.code == 200) {
+      addData.value = res.data;
+      addOne.value = true;
+    } else {
+      ElNotification({
+        title: '提示',
+        message: res.msg,
+        type: 'error',
+      })
+    }
+  });
+}
+function closeOne(id) {
   addOne.value = false;
 }
-function addOrEditOne(){
-  console.log('addData',addData);
-  http.post('/table/add_P',addData.value).then(res => {
-    if(res.code == 200){
-      getData(addData.value.p_b_id);
-    }
+
+
+// 新增he编辑
+function addOrEditOne() {
+  console.log('addData', addData);
+  if (editId.length == 0) {
+    http.post('/table/add_P', addData.value).then(res => {
+      if (res.code == 200) {
+        addOne.value = false;
+        ElNotification({
+          title: '提示',
+          message: '新增成功',
+          type: 'success',
+        })
+        getData(addData.value.p_b_id);
+      }
+    })
+  } else {
+    http.post('/table/edit_P', addData.value).then(res => {
+      if (res.code == 200) {
+        addOne.value = false;
+        ElNotification({
+          title: '提示',
+          message: '编辑成功',
+          type: 'success',
+        })
+        editId = '';
+        getData(addData.value.p_b_id);
+      }
+    })
+  }
+
+}
+
+
+let ids = '';
+// 获取选择的id合集
+function handleSelecChange(value) {
+  ids = '';
+  value.map((item, index) => {
+    ids += item.product_id;
+    (index == value.length - 1) ? '' : ids += ',';
   })
 }
 
+// 删除
+function deleteMoreAndOne(id = '-1') {
+  id == -1 ? '' : ids = id;
+  if (ids.length == 0) {
+    ElNotification({
+      title: '提示',
+      message: '请选择至少一条数据',
+      type: 'success',
+    })
+    return;
+  }
+  console.log('ids',ids);
+  ElMessageBox.confirm(`将删除id为> ${ids} <的商品,此操作不可逆,请确认`, '删除确认', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    distinguishCancelAndClose: true,
+    confirmButtonText: '确认删除',
+    cancelButtonText: '取消删除',
+  }).then(() => {
+    http.post('/table/delete_P', { ids: ids }).then((res) => {
+      if (res.code == 200) {
+        console.log('err', res);
+        getData(props.b_id.p_b_id);
+      }
+      ElNotification({
+        title: '提示',
+        message: res.msg,
+        type: 'success',
+      })
+    });
+  }).catch(() => {
+    ElNotification({
+      title: '提示',
+      message: '取消操作',
+      type: 'info',
+    })
+  });
+}
+
 // 默认数据
-const addData = ref({size:'',color:'',price:'',p_b_id:''});
-function getSunData_size (data){
+const addData = ref({ size: '', color: '', price: '', p_b_id: '' });
+function getSunData_size(data) {
   addData.value.size = data;
 }
-function getSunData_color (data){
+function getSunData_color(data) {
   addData.value.color = data;
 }
-function getSunData_price (data){
+function getSunData_price(data) {
   addData.value.price = data;
 }
-function givePath (data){
+function givePath(data) {
   addData.value.imgPaths = data;
 }
 

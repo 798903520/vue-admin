@@ -33,7 +33,7 @@ router.get('/get_p_Data', function (req, res) {
   let connection = require('../sql.js')
     connection.init();
     connection.connect();
-    let sql = `SELECT * FROM product where city_id = '${queryData.id}'`;
+    let sql = `SELECT * FROM product where product_id = '${queryData.product_id}'`;
     // 查询
     connection.query(sql).then(response => {
       res.send({
@@ -77,7 +77,7 @@ router.post('/edit_P', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `UPDATE product set city = "${req.body.city}" where city_id = ${req.body.city_id}`;
+  let sql = `UPDATE product set color = "${req.body.color}",content = "${req.body.content}",imgPaths = "${req.body.imgPaths}",name = "${req.body.name}",price = "${req.body.price}",size = "${req.body.size}" where product_id = ${req.body.product_id}`;
   connection.query(sql).then(rsb => {
     res.send({ code: '200', token: 'zhangc', msg: '修改成功' });
   }).catch(rsb => {
@@ -89,13 +89,13 @@ router.post('/edit_P', function (req, res) {
 })
 
 // 删除
-router.post('/delete_PB', function (req, res) {
+router.post('/delete_P', function (req, res) {
   // 直接返回对象
   console.log('name&psw', req.body);
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `delete from product where p_b_id in (${req.body.ids})`;
+  let sql = `delete from product where product_id in (${req.body.ids})`;
   console.log('sql', sql);
   connection.query(sql).then(rsb => {
     res.send({ code: '200', msg: '删除成功' });
