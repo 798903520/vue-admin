@@ -40,8 +40,8 @@
       <div class="contitle">
         <div class="left_type">
           <span class="leftTitle">分类</span>
-          <span class="goodsType" v-for="(item,idx) in typeData" :key="item.type">
-            <div class="children_type" v-for="(i, index) in item.children_type" v-if="idx<8" :key="i"><span
+          <span class="goodsType" v-for="(item, idx) in typeData" :key="item.type">
+            <div class="children_type" v-for="(i, index) in item.children_type" v-if="idx < 8" :key="i"><span
                 v-if="index != 0"><strong>&nbsp;/&nbsp;</strong></span><a @click="jumpTypeGoods(i)">{{ i }}</a></div>
           </span>
         </div>
@@ -103,7 +103,17 @@
           </div>
         </div>
       </div>
-      <div class="gess_goods"></div>
+      <div class="gess_goods">
+        <div class="gess_title">
+          猜你喜欢
+          <span>个性推荐</span>
+        </div>
+        <div class="goods_items">
+          <div class="good_one" v-for="item in yourLove" :key="item.product_id">
+            <span class="goods_title">{{ item.name}}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -112,7 +122,7 @@
 // 引入
 import { Swiper, SwiperSlide } from 'swiper/vue'
 // 组件
-import { getCurrentInstance } from 'vue' 
+import { getCurrentInstance } from 'vue'
 import { ElNotification } from 'element-plus'
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper";
@@ -145,7 +155,7 @@ onMounted(() => {
 /**
   * 跳转登录
   */
- let {ctx:that} = getCurrentInstance();
+let { ctx: that } = getCurrentInstance();
 function jumpLog() {
   if (userName.value == 'Hi,请登录') {
     router.push({
@@ -158,10 +168,10 @@ function jumpLog() {
     sessionStorage.removeItem('MyToken');
     sessionStorage.removeItem('userData');
     ElNotification({
-      type:'success',
-      message:'成功退出!'
+      type: 'success',
+      message: '成功退出!'
     });
-    userName.value= 'Hi,请登录';
+    userName.value = 'Hi,请登录';
     that.$forceUpdate();
   }
 }
@@ -236,6 +246,22 @@ function jumpTypeGoods(type) {
 /**
   * 轮播
   */
+
+ /**
+   * 获取推广数据
+   */
+  const yourLove = ref([]);
+  onMounted(()=>{
+    getIndexList();
+  })
+  function getIndexList(){
+    http.get('/table/get_index_list').then(res => {
+      console.log('res',res);
+      if(res.code == 200){
+        yourLove.value = res.data;
+      }
+    });
+  }
 </script>
 
 <style lang="less" scoped>
@@ -273,7 +299,7 @@ function jumpTypeGoods(type) {
     display: flex;
   }
 
-  .type_child{
+  .type_child {
     margin-top: 25px;
   }
 
@@ -283,7 +309,8 @@ function jumpTypeGoods(type) {
     -webkit-background-clip: text;
     color: transparent;
   }
-  .goodsType .children_type{
+
+  .goodsType .children_type {
     margin-top: 25px;
   }
 
@@ -608,6 +635,25 @@ function jumpTypeGoods(type) {
     }
   }
 }
+
+.gess_goods {
+  margin-top: 45px;
+  width: 100%;
+
+  .gess_title {
+    font-size: 25px;
+    font-weight: bold;
+
+    span {
+      display: inline-block;
+      font-size: 12px;
+      color: white;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background-image: linear-gradient(to right, rgb(253, 161, 255), rgb(0, 187, 255));
+    }
+  }
+}
 </style>
 <style>
 .search_input .el-input__wrapper {
@@ -644,4 +690,5 @@ function jumpTypeGoods(type) {
   width: 80px;
   margin: auto 0;
   background-image: linear-gradient(to right, rgb(251, 14, 255), rgb(0, 187, 255));
-}</style>
+}
+</style>

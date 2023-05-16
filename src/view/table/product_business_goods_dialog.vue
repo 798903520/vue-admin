@@ -23,11 +23,17 @@
         <el-table-column label="介绍" prop="content"></el-table-column>
         <el-table-column label="价格" prop="price"></el-table-column>
         <el-table-column label="图片" prop="imgPaths"></el-table-column>
+        <el-table-column label="推广状态" prop="surplus">
+          <template #default="scope">
+            {{scope.row.surplus == 'false'?'未推广':'正在推广'}}
+          </template>
+        </el-table-column>
         <el-table-column width="200" label="创建时间" prop="create_product_time"></el-table-column>
         <el-table-column width="200" label="操作">
           <template #default="scope">
             <el-button link type="primary" @click="editOne(scope.row.product_id)">编辑</el-button>
             <el-button link type="primary" @click="deleteMoreAndOne(scope.row.product_id)">删除</el-button>
+            <el-button link type="primary" @click="changesurplus(scope.row)">{{ scope.row.surplus == 'false'?'推广商品':'取消推广' }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,8 +101,6 @@ const query = ref({
   p_b_id: null,
 });
 function getData(id) {
-  console.log('id', id, query.value);
-
   query.value.p_b_id = id;
   http.get('/table/get_p_List', query.value).then(res => {
     if (res.code == 200) {
@@ -158,7 +162,6 @@ function closeOne(id) {
 
 // 新增he编辑
 function addOrEditOne() {
-  console.log('addData', addData);
   if (editId.length == 0) {
     http.post('/table/add_P', addData.value).then(res => {
       if (res.code == 200) {
@@ -210,7 +213,6 @@ function deleteMoreAndOne(id = '-1') {
     })
     return;
   }
-  console.log('ids',ids);
   ElMessageBox.confirm(`将删除id为> ${ids} <的商品,此操作不可逆,请确认`, '删除确认', {
     // if you want to disable its autofocus
     // autofocus: false,
@@ -220,7 +222,6 @@ function deleteMoreAndOne(id = '-1') {
   }).then(() => {
     http.post('/table/delete_P', { ids: ids }).then((res) => {
       if (res.code == 200) {
-        console.log('err', res);
         getData(props.b_id.p_b_id);
       }
       ElNotification({
@@ -236,6 +237,24 @@ function deleteMoreAndOne(id = '-1') {
       type: 'info',
     })
   });
+}
+
+// 修改推广状态
+function changesurplus(item){
+  let data = JSON.parse(JSON.stringify(item));
+  data.surplus = (data.surplus == 'false')?'true':'false';
+  // return
+  http.post('/table/edit_P', data).then(res => {
+      if (res.code == 200) {
+        addOne.value = false;
+        ElNotification({
+          title: '提示',
+          message: '为你推广',
+          type: 'success',
+        })
+        getData(addData.value.p_b_id);
+      }
+    })
 }
 
 // 默认数据

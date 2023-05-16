@@ -23,6 +23,7 @@ const url = import.meta.env.VITE_APP_BASE_API;
   justify-content: right;
   align-items: center;
   padding-right: 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.3);
   img{
     height: 50px;
     width: 50px;

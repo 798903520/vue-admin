@@ -77,7 +77,7 @@ router.post('/edit_P', function (req, res) {
   let connection = require('../sql.js')
   connection.init();
   connection.connect();
-  let sql = `UPDATE product set color = "${req.body.color}",content = "${req.body.content}",imgPaths = "${req.body.imgPaths}",name = "${req.body.name}",price = "${req.body.price}",size = "${req.body.size}" where product_id = ${req.body.product_id}`;
+  let sql = `UPDATE product set surplus = "${req.body.surplus}",color = "${req.body.color}",content = "${req.body.content}",imgPaths = "${req.body.imgPaths}",name = "${req.body.name}",price = "${req.body.price}",size = "${req.body.size}" where product_id = ${req.body.product_id}`;
   connection.query(sql).then(rsb => {
     res.send({ code: '200', token: 'zhangc', msg: '修改成功' });
   }).catch(rsb => {
@@ -105,5 +105,29 @@ router.post('/delete_P', function (req, res) {
 
   });
   connection.close();
+})
+
+// 获取展示数据
+router.get('/get_index_list', function (req, res) {
+  // 直接返回对象
+  let queryData = req.query;
+let connection = require('../sql.js')
+    connection.init();
+    connection.connect();
+    let sql = `SELECT * FROM product where surplus = 'true'`;
+    // 查询
+    connection.query(sql).then((data)=>{
+      res.send({
+        code:'200',
+        data:data,
+        msg:'查询成功'
+      })
+    }).catch(()=>{
+      res.send({
+        code:'100',
+        msg:"查询出错,请通知管理员"
+      });
+    });
+    connection.close();
 })
 module.exports = router
