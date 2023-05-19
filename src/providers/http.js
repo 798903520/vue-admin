@@ -73,10 +73,12 @@ axios.interceptors.response.use(
 
 const http = {
     // 封装get请求
-    get(url, params = {}) {
+    get(url, params = {},con = {}) {
+        console.log('con',con);
         return new Promise((resolve, reject) => {
             axios.get(url, {
-                params: params
+                params: params,
+                headers:con
             }).then(res => {
                 resolve(res);
             }).catch(err => {

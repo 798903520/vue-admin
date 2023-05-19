@@ -58,7 +58,7 @@ function getVNode(TDom) {
     return vNode;
 }
 
-//图片转base64
+//file blob  转base64
 function toBase64(file) {
     return new Promise((resolve, reject) => {
         if (window.FileReader) {

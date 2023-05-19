@@ -132,6 +132,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/detail/:id',
+            name:'detail',
+            component: () => import('../view/shop/shopDetail.vue'),
+            meta: {
+                title: '商品详情',
+                Permission:'user,root,lang'
+            }
+        },
+        {
             path: '/404',
             name:'404',
             component: () => import('../view/404.vue'),

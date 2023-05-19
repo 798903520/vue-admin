@@ -109,8 +109,14 @@
           <span>个性推荐</span>
         </div>
         <div class="goods_items">
-          <div class="good_one" v-for="item in yourLove" :key="item.product_id">
-            <span class="goods_title">{{ item.name}}</span>
+          <div class="good_one" @click="jumpDetail(item.product_id)" v-for="item in yourLove" :key="item.product_id">
+            <img :src="baseUrl + item.imgPaths" alt="">
+            <div class="right_con">
+              <span class="goods_title">{{ item.name }}
+                <span class="tips"></span>
+              </span>
+              <span class="spice">¥ <span style="font-size: 25px;">{{ item.price.split(',')[0] }}</span> </span>
+            </div>
           </div>
         </div>
       </div>
@@ -131,6 +137,8 @@ import 'swiper/css'
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import http from '../../providers/http'
+
+const baseUrl = import.meta.env.VITE_APP_BASE_API;
 
 const router = useRouter();
 const route = useRoute();
@@ -247,21 +255,29 @@ function jumpTypeGoods(type) {
   * 轮播
   */
 
- /**
-   * 获取推广数据
-   */
-  const yourLove = ref([]);
-  onMounted(()=>{
-    getIndexList();
-  })
-  function getIndexList(){
-    http.get('/table/get_index_list').then(res => {
-      console.log('res',res);
-      if(res.code == 200){
-        yourLove.value = res.data;
-      }
-    });
-  }
+/**
+  * 获取推广数据
+  */
+const yourLove = ref([]);
+onMounted(() => {
+  getIndexList();
+})
+function getIndexList() {
+  http.get('/table/get_index_list').then(res => {
+    console.log('res', res);
+    if (res.code == 200) {
+      yourLove.value = res.data;
+    }
+  });
+}
+
+
+/**
+  * 打开新页面
+  */
+ function jumpDetail(id){
+  window.open('/detail/'+id,'_blank');
+ }
 </script>
 
 <style lang="less" scoped>
@@ -653,6 +669,56 @@ function jumpTypeGoods(type) {
       background-image: linear-gradient(to right, rgb(253, 161, 255), rgb(0, 187, 255));
     }
   }
+
+  .goods_items {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+.good_one:hover{
+  box-shadow: inset 0px 0px 1px 1px #89adff;
+}
+    .good_one {
+      background-color: #f7f9fa;
+      width: calc(32% - 22px);
+      height: auto;
+      margin-right: 2%;
+      display: flex;
+      margin-top: 20px;
+      padding: 11px;
+      border-radius: 11px;
+
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 11px;
+      }
+
+      .spice {
+        background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+    }
+    .goods_title{
+      font-size: 17px;
+    }
+    .goods_title:hover{
+      background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    .good_one:nth-child(3n) {
+      margin-right: 0;
+    }
+
+    .right_con {
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
 }
 </style>
 <style>
@@ -690,5 +756,4 @@ function jumpTypeGoods(type) {
   width: 80px;
   margin: auto 0;
   background-image: linear-gradient(to right, rgb(251, 14, 255), rgb(0, 187, 255));
-}
-</style>
+}</style>
