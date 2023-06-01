@@ -21,6 +21,7 @@ const baseUrl = import.meta.env.VITE_APP_BASE_API;
 async function draw() {
   // 初始化一个场景
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color( '#b5b7b7' );
   //创建一个长方体几何对象Geometry
   const geometry = new THREE.BoxGeometry(50, 50, 50);
 
@@ -40,8 +41,8 @@ async function draw() {
   //纹理贴图加载器TextureLoader
   const texLoader = new THREE.TextureLoader();
   texLoader.crossOrigin = 'anonymous'
-  console.log('baseUrl+goodsData.value', baseUrl + goodsData.value.imgPaths);
-  const texture = texLoader.load(baseUrl + goodsData.value.imgPaths);
+  let dd = await http.get('/upload/getImg?img='+goodsData.value.imgPaths);
+  const texture = texLoader.load('data:image/png;base64,'+dd);
   //创建一个材质对象Material
   const material = new THREE.MeshLambertMaterial({
     // color: 0xff0000,//0xff0000设置材质颜色为红色
@@ -73,7 +74,7 @@ async function draw() {
   const camera = new THREE.PerspectiveCamera();
   //相机在Three.js三维坐标系中的位置
   // 根据需要设置相机位置具体值
-  camera.position.set(300, 300, 300);
+  camera.position.set(260, 260, 260);
   //相机观察目标指向Threejs 3D空间中某个位置
   camera.lookAt(0, 0, 0); //坐标原点
 
@@ -90,11 +91,12 @@ async function draw() {
   const width1 = 800; //宽度
   const height1 = 500; //高度
   renderer.setSize(width1, height1); //设置three.js渲染区域的尺寸(像素px)
-  var data = 0;
+  let data = 0;
   function anu() {
     requestAnimationFrame(anu);
-    mesh.rotation.x += 0.03;
-    mesh.rotation.y += 0.03;
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.01;
+    mesh.rotation.z += 0.01;
     // mesh.rotation. += 0.01;
     renderer.render(scene, camera); //执行渲染操作
   }
@@ -103,7 +105,6 @@ async function draw() {
     document.getElementById('webgl').appendChild(renderer.domElement);
   });
 }
-// draw()
 
 /**
   * 获取商品数据

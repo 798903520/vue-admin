@@ -13,6 +13,7 @@ router.post('/uploadImg', function (req, res) {
     // 直接返回对象
 
     let form = new multiparty.Form();
+    form.maxFilesSize = 20 * 1024 * 1024;
     form.parse(req,(err, fields, files) => {
         let base64Data = fields.blobFile[0].replace(/^data:image\/\w+;base64,/, "");
         let dataBuffer = new Buffer.from(base64Data, 'base64');
@@ -30,6 +31,20 @@ router.post('/uploadImg', function (req, res) {
             });
             }
         });
+    })
+})
+router.get('/getImg', function (req, res) {
+    // 直接返回对象
+
+  let img = req.query.img.substring(1,req.query.img.length);
+//   let path = '..'+img;
+  console.log('img',img);
+  const data = fs.readFile(img, function (err, data) {
+    if (err) {
+      res.send('读取错误')
+    } else {
+      res.send(data.toString('base64'))
+    }
     })
 })
 module.exports = router

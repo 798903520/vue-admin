@@ -75,7 +75,16 @@ const router = createRouter({
                                 Permission:'root'
                             },
                             component: () => import('../view/game/ball.vue'),
-                        }
+                        },
+                        {
+                            path:'/game/tetris',
+                            name:'俄罗斯方块',
+                            meta: {
+                                title: '俄罗斯方块',
+                                Permission:'root'
+                            },
+                            component: () => import('../view/game/tetris.vue'),
+                        },
                     ]
                 },
                 {

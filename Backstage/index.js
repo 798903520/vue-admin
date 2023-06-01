@@ -1,9 +1,14 @@
 const express = require('express')
 const path = require("path");
 const app = express();
-app.use(express.urlencoded());//传递键值对
-app.use(express.json());//传递json
+const cors = require("cors")
+app.use(cors())
+// app.use(express.urlencoded());//传递键值对
+// app.use(express.json());//传递json
 app.use('/public',express.static(path.join(__dirname, './public')));//指定静态资源文件夹
+
+app.use(express.urlencoded({ limit:'10mb'}));
+app.use(express.json({limit:'10mb'}));
 
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
