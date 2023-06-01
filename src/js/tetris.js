@@ -2,8 +2,8 @@ export default class tetris {
     length=null// 边长 需要根据传过来的数据计算位置
     type=null//方块类型
     arr = null//方块数组
-    height=null// 初始高度
-    width=null// 初始宽度
+    pointY=null// 初始Y坐标
+    pointX=150// 初始X坐标
     constructor(length = 10,type = this.randomNum(7)) {
         this.type = type ;
         this.length = length;
@@ -59,10 +59,10 @@ export default class tetris {
                 this.arr[2][1] = 0;
                 break;
         }
-        this.height = 0 - this.arr[0].length*this.length;
-        this.width = 0 - this.arr.length*this.length;
+        this.pointY = 0 - this.arr[0].length*this.length;
+        // this.pointX = 0 - this.arr.length*this.length;
     }
-    moveBlock(){
-        this.height = this.height + this.length;
+    fullDown(){
+        this.pointY = this.pointY + this.length;
     }
 }
