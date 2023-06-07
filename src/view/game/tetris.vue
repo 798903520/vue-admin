@@ -15,6 +15,7 @@ import tetrisBlock from "../../js/tetris";
 const whBoth = 30;//边长
 const _width = 360;
 const _height = 600;
+const step = 500;
 
 // 生成 x 条数据
 function getTData(x) {
@@ -68,9 +69,9 @@ async function drawBG() {
       // console.log(`x=${itemx},y=${itemy}`);
 
       // 填充矩形
-      if(BGData.value[itemx][itemy] == 0){
+      if (BGData.value[itemx][itemy] == 0) {
         ctx.value.strokeRect(itemx * whBoth, itemy * whBoth, whBoth, whBoth);
-      }else if(BGData.value[itemx][itemy] == 1){
+      } else if (BGData.value[itemx][itemy] == 1) {
         ctx.value.fillRect(itemx * whBoth, itemy * whBoth, whBoth, whBoth);
       }
       // ctx.fillRect(itemx*whBoth+whBoth/2.6,itemy*whBoth+whBoth/2.6,whBoth/4,whBoth/4);
@@ -134,14 +135,22 @@ const nowFK = reactive({});
 // 下一个方块
 const nextFK = reactive({});
 
+// 出来的位置
+let pXY = { x: 5, y: -1 };
+
+// 交换数据
+function changeData(){
+  nowFK.value = nextFK.value;
+  nextFK.value = new tetrisBlock(whBoth);
+}
 //四种状态
 function gameStart() {
-  console.log('ctx', ctx.value);
   nowFK.value = new tetrisBlock(whBoth, 0);
   nextFK.value = new tetrisBlock(whBoth);
   timmer = setInterval(() => {
-    fullDwn()
-  }, 1000);
+    // fullDwn()
+    fulldown1()
+  }, step);
 }
 function gameStop() {
   clearInterval(timmer);
@@ -149,8 +158,9 @@ function gameStop() {
 }
 function gameContinue() {
   timmer = setInterval(() => {
-    fullDwn();
-  }, 1000);
+    // fullDwn();
+    fulldown1()
+  }, step);
 }
 function gameEnd() { }
 
@@ -158,36 +168,79 @@ function fullDwn() {
   clearBG();
   drawBG();
   // if (nowFK.value.pointY == )
-    for (let index in nowFK.value.arr) {
-      for (let idx in nowFK.value.arr[index]) {
-        console.log('nowFK.value.arr[index]', nowFK.value.arr[index][idx]);
-        if (nowFK.value.arr[index][idx] == 1) {
-          ctx.value.fillRect(
-            nowFK.value.pointX + index * whBoth,
-            nowFK.value.pointY + idx * whBoth,
-            whBoth, whBoth
-          )
-        }
+  for (let index in nowFK.value.arr) {
+    for (let idx in nowFK.value.arr[index]) {
+      console.log('nowFK.value.arr[index]', nowFK.value.arr[index][idx]);
+      if (nowFK.value.arr[index][idx] == 1) {
+        ctx.value.fillRect(
+          nowFK.value.pointX + index * whBoth,
+          nowFK.value.pointY + idx * whBoth,
+          whBoth, whBoth
+        )
       }
     }
+  }
   nowFK.value.fullDown();
 }
+/**
+  * pXY.x 5
+  * pXY.y -2
+  */
+function fulldown1() {
+  console.log('pXY.y',pXY.y);
+  pXY.y++;
+  let oldNum = 0;
+  if(pXY.y > 0){
+    oldNum = pXY.y -1;
+  }
 
-function fulldown1(){
-  for (let index in nowFK.value.arr) {
-      for (let idx in nowFK.value.arr[index]) {
-        console.log('nowFK.value.arr[index]', nowFK.value.arr[index][idx]);
-        BGData.value[5][0] = BGData.value[5][0] == nowFK.value[index][idx]?'':'';
-        // if (nowFK.value.arr[index][idx] == 1) {
-        //   ctx.value.fillRect(
-        //     nowFK.value.pointX + index * whBoth,
-        //     nowFK.value.pointY + idx * whBoth,
-        //     whBoth, whBoth
-        //   )
-        // }
+
+   for(let index = nowFK.value.arr.length-1;index>-1;index--){
+    for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
+      if(BGData.value[pXY.x + index][pXY.y + idx] == 1){
+        gameStop();
+        pXY = { x: 5, y: -1 };
+        changeData();
+        gameContinue();
+        console.log('q123131');
+        return
       }
+      if(pXY.y + idx == 20){
+        gameStop();
+        pXY = { x: 5, y: -1 };
+        changeData();
+        gameContinue();
+        console.log('123123123123');
+        return;
+      }
+      BGData.value[pXY.x + index][oldNum + idx] = 0;
     }
-  BGData.value[5][0] == nowFK.value[0][0]
+  }
+
+   for(let index = nowFK.value.arr.length-1;index>-1;index--){
+    for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
+      // 当下面有方块的时候暂停
+      if(BGData.value[pXY.x + index][pXY.y + idx] == 1){
+        gameStop();
+        pXY = { x: 5, y: -1 };
+        changeData();
+        gameContinue();
+        console.log('q123131');
+        return
+      }
+      if(pXY.y + idx == 20){
+        gameStop();
+        pXY = { x: 5, y: -1 };
+        changeData();
+        gameContinue();
+        console.log('test123123123123');
+        return
+      }
+      BGData.value[pXY.x + index][pXY.y + idx] == nowFK.value.arr[index][idx] ?BGData.value[pXY.x + index][pXY.y + idx]= 0 : BGData.value[pXY.x + index][pXY.y + idx]=1;
+    }
+  }
+  clearBG();
+  drawBG();
 }
 
 
