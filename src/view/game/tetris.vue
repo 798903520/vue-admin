@@ -15,7 +15,7 @@ import tetrisBlock from "../../js/tetris";
 const whBoth = 30;//边长
 const _width = 360;
 const _height = 600;
-const step = 500;
+const step = 200;
 
 // 生成 x 条数据
 function getTData(x) {
@@ -187,7 +187,12 @@ function fullDwn() {
   * pXY.y -2
   */
 function fulldown1() {
+  
+  let bottomArr = [];
+  
   console.log('pXY.y',pXY.y);
+
+
   pXY.y++;
   let oldNum = 0;
   if(pXY.y > 0){
@@ -197,12 +202,21 @@ function fulldown1() {
 
    for(let index = nowFK.value.arr.length-1;index>-1;index--){
     for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
-      if(BGData.value[pXY.x + index][pXY.y + idx] == 1){
+      if(BGData.value[pXY.x + index][pXY.y + idx] == 0){
+        bottomArr.push({index,idx});
+      }
+    }
+  }
+  console.log('bottomArr',bottomArr);
+
+   output1 : for(let index = nowFK.value.arr.length-1;index>-1;index--){
+   output2 : for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
+      if(BGData.value[pXY.x + index][pXY.y + idx] == 1&&BGData.value[pXY.x + index][pXY.y + idx+1] == 1){
         gameStop();
         pXY = { x: 5, y: -1 };
         changeData();
         gameContinue();
-        console.log('q123131');
+        console.log('clearn break1');
         return
       }
       if(pXY.y + idx == 20){
@@ -210,7 +224,7 @@ function fulldown1() {
         pXY = { x: 5, y: -1 };
         changeData();
         gameContinue();
-        console.log('123123123123');
+        console.log('clearn break2');
         return;
       }
       BGData.value[pXY.x + index][oldNum + idx] = 0;
@@ -220,12 +234,12 @@ function fulldown1() {
    for(let index = nowFK.value.arr.length-1;index>-1;index--){
     for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
       // 当下面有方块的时候暂停
-      if(BGData.value[pXY.x + index][pXY.y + idx] == 1){
+      if(BGData.value[pXY.x + index][pXY.y + idx] == 1&&BGData.value[pXY.x + index][pXY.y + idx+1] == 1){
         gameStop();
         pXY = { x: 5, y: -1 };
         changeData();
         gameContinue();
-        console.log('q123131');
+        console.log('block break1');
         return
       }
       if(pXY.y + idx == 20){
@@ -233,7 +247,7 @@ function fulldown1() {
         pXY = { x: 5, y: -1 };
         changeData();
         gameContinue();
-        console.log('test123123123123');
+        console.log('block break2');
         return
       }
       BGData.value[pXY.x + index][pXY.y + idx] == nowFK.value.arr[index][idx] ?BGData.value[pXY.x + index][pXY.y + idx]= 0 : BGData.value[pXY.x + index][pXY.y + idx]=1;
