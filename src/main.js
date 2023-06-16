@@ -8,6 +8,8 @@ import 'element-plus/dist/index.css';
 
 import router from './router/index'
 
+import './providers/http.js'
+
 const app = createApp(App)
 app.use(router)
 app.use(ElementPlus)

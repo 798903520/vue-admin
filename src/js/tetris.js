@@ -4,6 +4,7 @@ export default class tetris {
     arr = null//方块数组
     pointY=null// 初始Y坐标
     pointX=150// 初始X坐标
+    bottomArr=[]// 下边界数组
     constructor(length = 10,type = this.randomNum(7)) {
         this.type = type ;
         this.length = length;
@@ -29,29 +30,35 @@ export default class tetris {
         switch (this.type) {
             case 0: //o型
                 this.arr = this.fillArr(2,2);
+                this.bottomArr=[{x:0,y:1},{x:1,y:1}]
                 break;
             case 1: //I型
                 this.arr = this.fillArr(1,4);
+                this.bottomArr=[{x:0,y:3}]
                 break;
             case 2: //S型
                 this.arr = this.fillArr(3,2);
                 this.arr[0][0] = 0;
                 this.arr[2][1] = 0;
+                this.bottomArr=[{x:0,y:1},{x:1,y:1},{x:2,y:0}]
                 break;
             case 3: //Z型
                 this.arr = this.fillArr(3,2);
                 this.arr[2][0] = 0;
                 this.arr[0][1] = 0;
+                this.bottomArr=[{x:0,y:0},{x:1,y:1},{x:2,y:1}]
                 break;
             case 4: //L型
                 this.arr = this.fillArr(2,3);
                 this.arr[1][0] = 0;
                 this.arr[1][1] = 0;
+                this.bottomArr=[{x:0,y:2},{x:1,y:2}]
                 break;
             case 5: //J型
                 this.arr = this.fillArr(2,3);
                 this.arr[0][0] = 0;
                 this.arr[0][1] = 0;
+                this.bottomArr=[{x:0,y:1},{x:1,y:1},{x:2,y:0}]
                 break;
             case 6: //T型
                 this.arr = this.fillArr(3,2);

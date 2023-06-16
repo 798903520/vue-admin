@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import Vue from 'vue';
 import Router from '../router'
 
 axios.defaults.timeout = 30000;
@@ -11,18 +10,18 @@ var _token = sessionStorage.getItem('_token') || undefined;
 axios.interceptors.request.use(function (config) {
     // console.log('config',config)
     // 在发送请求之前做些什么  bug=1的时候,直接放行
-    if (config.method == "get"&&config.bug!=1) {
+    if (config.method == "get" && config.bug != 1) {
         if (config.params && config.params.token) {
             config.headers.authorization = config.params.token.replace('%20', ' ');
         }
-        config.params.token?'':delete config.params.token;
-    } else if (config.method == "post"&&config.bug!=1) {
+        config.params.token ? '' : delete config.params.token;
+    } else if (config.method == "post" && config.bug != 1) {
 
         if (config.data && config.data.token) {
-            console.log(config.url,config.data)
+            console.log(config.url, config.data)
             config.headers.authorization = config.data.token.replace('%20', ' ');
         }
-        config.data.token?'':delete config.data.token;
+        // config.data.token?'':delete config.data.token;
     }
     return config;  //添加这一行
 })
@@ -73,12 +72,12 @@ axios.interceptors.response.use(
 
 const http = {
     // 封装get请求
-    get(url, params = {},con = {}) {
-        console.log('con',con);
+    get(url, params = {}, con = {}) {
+        console.log('con', con);
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 params: params,
-                headers:con
+                headers: con
             }).then(res => {
                 resolve(res);
             }).catch(err => {
@@ -98,27 +97,19 @@ const http = {
                 })
         })
     },
-    setToken(token) {
-        if (token) {
-            _token = decodeURI(token);
-            sessionStorage.setItem('_token', _token);
-        } else {
-            _token = undefined;
-            sessionStorage.removeItem('_token');
-        }
+    Lpost(url, data) {
+        axios.post(url).then(res => {
+            console.log('res', res);
+        })
     },
-    setuuid(uuid) {
-        axios.interceptors.request.use(
-            config => {
-                if (uuid) {
-                    config.headers.uuid = uuid;
-                }
-                return config;
-            },
-            error => {
-                return Promise.reject(error);
-            }
-        )
+    Lget(url, data) {
+        return new Promise((resolve, reject) => {
+            axios.post(url).then(res => {
+                resolve(res);
+            }).catch(err => {
+                reject(err)
+            })
+        })
     }
 }
 

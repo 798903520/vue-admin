@@ -117,6 +117,15 @@ const router = createRouter({
                             },
                             component: () => import('../view/tools/numToZH.vue'),
                         },
+                        {
+                            path:'/tools/23Type',
+                            name:'23种设计模式',
+                            meta: {
+                                title: '23种设计模式',
+                                Permission:'root'
+                            },
+                            component: () => import('../view/tools/23type.vue'),
+                        },
                     ]
                 },
 

@@ -200,16 +200,17 @@ function fulldown1() {
   }
 
 
-   for(let index = nowFK.value.arr.length-1;index>-1;index--){
-    for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
-      if(BGData.value[pXY.x + index][pXY.y + idx] == 0){
-        bottomArr.push({index,idx});
-      }
-    }
-  }
-  console.log('bottomArr',bottomArr);
+  //  for(let index = nowFK.value.arr.length-1;index>-1;index--){
+  //   for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
+  //     if(BGData.value[pXY.x + index][pXY.y + idx] == 0){
+  //       bottomArr.push({index,idx});
+  //     }
+  //   }
+  // }
+  // console.log('bottomArr',bottomArr);
 
    output1 : for(let index = nowFK.value.arr.length-1;index>-1;index--){
+    console.log('index',index,nowFK.value.type);
    output2 : for(let idx = nowFK.value.arr[index].length-1;idx>-1;idx--){
       if(BGData.value[pXY.x + index][pXY.y + idx] == 1&&BGData.value[pXY.x + index][pXY.y + idx+1] == 1){
         gameStop();
@@ -275,8 +276,8 @@ const isPlay = computed(() => {
 
 
 onMounted(() => {
-  getDraw();
-  fillBGArr();
+  // getDraw();
+  // fillBGArr();
 
 });
 </script>
@@ -294,7 +295,6 @@ onMounted(() => {
   }
 
   .leftArea {
-    // text
   }
 }
 
