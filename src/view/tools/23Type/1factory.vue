@@ -6,9 +6,10 @@
 
 <script setup>
 import baseType from './1typeTemplate.vue'
+import { ref } from 'vue';
 
-const leftWord = `
-class Product {
+const leftWord = ref(
+  `class Product {
     constructor(name) {
         this.name = name
     }
@@ -32,8 +33,7 @@ class Factory {
 let factory = new Factory()
 let p = factory.create('p1')
 p.init()
-p.fun()
-`;
+p.fun()`);
 
 </script>
 

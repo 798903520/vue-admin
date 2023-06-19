@@ -7,7 +7,8 @@
 <script setup>
 import baseType from './1typeTemplate.vue'
 
-const leftWord = ` class LoginForm {
+const leftWord = 
+`class LoginForm {
     constructor() {
         this.state = 'hide'
     }

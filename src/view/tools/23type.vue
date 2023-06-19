@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="rightContent" ondragover="event.preventDefault()" @drop="getData()">
-      <component :is="tagInfo[dropData.index]?tagInfo[dropData.index].component:'null'">
+      <component :class="tagInfo[dropData.index]?tagInfo[dropData.index].key:-1" :key="tagInfo[dropData.index]?tagInfo[dropData.index].key:-1" :is="tagInfo[dropData.index]?tagInfo[dropData.index].component:'null'">
         <div class="text">拖到此处以使用</div>
       </component>
     </div>
@@ -20,8 +20,9 @@ import { ElNotification } from 'element-plus'
 import { ref, onMounted } from 'vue';
 
 // 子组件
-import Factory from './23Type/factory.vue'
-import singleExample from './23Type/singleExample.vue'
+import Factory from './23Type/1factory.vue'
+import singleExample from './23Type/2singleExample.vue'
+import empty from './23Type/empty.vue'
 
 
 // 组件数据
@@ -38,98 +39,98 @@ const tagInfo = [
   },
   {
     name: '适配器模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '装饰者模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '代理模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '外观模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '观察者模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '状态模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '迭代器模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '桥接模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '组合模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '原型模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '策略模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '享元模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '模板方法模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '职责链模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '命令模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '备忘录模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '中介者模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '解释器模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
   {
     name: '访问者模式',
-    key: 'singleExample',
-    component: singleExample
+    key: 'empty',
+    component: empty
   },
 ]
 //  当前拖动的组件
@@ -249,12 +250,14 @@ function deleteNowCom() {
     box-sizing: border-box;
     padding: 10px;
     border-radius: 4px;
+    position: relative;
 
     .text {
-      width: 50%;
-      height: 50%;
-
+      position: absolute;
       text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
     }
   }
 
