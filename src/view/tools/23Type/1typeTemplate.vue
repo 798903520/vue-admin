@@ -45,7 +45,7 @@ let cursor = {};
 
 // 点击面板获取位置xinxi 
 function getWhere() {
-  cursor = window.getSelection();
+  cursor = window.getSelection(); 
 }
 
 
@@ -183,6 +183,7 @@ onMounted(() => {
       color: #4e4e4e;
       cursor: pointer;
       margin-right: 10px;
+      user-select: none;
     }
 
     .console {

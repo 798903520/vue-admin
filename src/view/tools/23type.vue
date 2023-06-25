@@ -22,6 +22,26 @@ import { ref, onMounted } from 'vue';
 // 子组件
 import Factory from './23Type/1factory.vue'
 import singleExample from './23Type/2singleExample.vue'
+import adapters from './23Type/3adapters.vue'
+import decorators from './23Type/4decorators.vue'
+import agents from './23Type/5agents.vue'
+import appearance from './23Type/6appearance.vue'
+import observers from './23Type/7observers.vue'
+import status from './23Type/8status.vue'
+import iterators from './23Type/9Iterators.vue'
+import bridge from './23Type/10bridge.vue'
+import portfolio from './23Type/11portfolio.vue'
+import prototype from './23Type/12prototype.vue'
+import strategies from './23Type/13strategies.vue'
+import enjoyment from './23Type/14enjoyment.vue'
+import template from './23Type/15template.vue'
+import responsibility from './23Type/16responsibility.vue'
+import orders from './23Type/17orders.vue'
+import memorandum from './23Type/18memorandum.vue'
+import intermediaries from './23Type/19intermediaries.vue'
+import interpreter from './23Type/20interpreter.vue'
+import interviewer from './23Type/21interviewer.vue'
+
 import empty from './23Type/empty.vue'
 
 
@@ -39,18 +59,18 @@ const tagInfo = [
   },
   {
     name: '适配器模式',
-    key: 'empty',
-    component: empty
+    key: 'adapters',
+    component: adapters
   },
   {
     name: '装饰者模式',
-    key: 'empty',
-    component: empty
+    key: 'decorators',
+    component: decorators
   },
   {
     name: '代理模式',
-    key: 'empty',
-    component: empty
+    key: 'agents',
+    component: agents
   },
   {
     name: '外观模式',
@@ -59,78 +79,78 @@ const tagInfo = [
   },
   {
     name: '观察者模式',
-    key: 'empty',
-    component: empty
+    key: 'observers',
+    component: observers
   },
   {
     name: '状态模式',
-    key: 'empty',
-    component: empty
+    key: 'status',
+    component: status
   },
   {
     name: '迭代器模式',
-    key: 'empty',
-    component: empty
+    key: 'iterators',
+    component: iterators
   },
   {
     name: '桥接模式',
-    key: 'empty',
-    component: empty
+    key: 'bridge',
+    component: bridge
   },
   {
     name: '组合模式',
-    key: 'empty',
-    component: empty
+    key: 'portfolio',
+    component: portfolio
   },
   {
     name: '原型模式',
-    key: 'empty',
-    component: empty
+    key: 'prototype',
+    component: prototype
   },
   {
     name: '策略模式',
-    key: 'empty',
-    component: empty
+    key: 'strategies',
+    component: strategies
   },
   {
     name: '享元模式',
-    key: 'empty',
-    component: empty
+    key: 'enjoyment',
+    component: enjoyment
   },
   {
     name: '模板方法模式',
-    key: 'empty',
-    component: empty
+    key: 'template',
+    component: template
   },
   {
     name: '职责链模式',
-    key: 'empty',
-    component: empty
+    key: 'responsibility',
+    component: responsibility
   },
   {
     name: '命令模式',
-    key: 'empty',
-    component: empty
+    key: 'orders',
+    component: orders
   },
   {
     name: '备忘录模式',
-    key: 'empty',
-    component: empty
+    key: 'memorandum',
+    component: memorandum
   },
   {
     name: '中介者模式',
-    key: 'empty',
-    component: empty
+    key: 'intermediaries',
+    component: intermediaries
   },
   {
     name: '解释器模式',
-    key: 'empty',
-    component: empty
+    key: 'interpreter',
+    component: interpreter
   },
   {
     name: '访问者模式',
-    key: 'empty',
-    component: empty
+    key: 'interviewer',
+    component: interviewer
   },
 ]
 //  当前拖动的组件
