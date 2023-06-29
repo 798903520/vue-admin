@@ -126,6 +126,15 @@ const router = createRouter({
                             },
                             component: () => import('../view/tools/23type.vue'),
                         },
+                        {
+                            path:'/tools/drawBoard',
+                            name:'画图',
+                            meta: {
+                                title: '画图',
+                                Permission:'root'
+                            },
+                            component: () => import('../view/tools/drawBoard.vue'),
+                        },
                     ]
                 },
 

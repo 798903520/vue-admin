@@ -8,6 +8,7 @@
       </div>
     </div>
     <div class="rightContent" ondragover="event.preventDefault()" @drop="getData()">
+      <span class="name" v-if="tagInfo[dropData.index]">{{ tagInfo[dropData.index].name }}</span>
       <component :class="tagInfo[dropData.index]?tagInfo[dropData.index].key:-1" :key="tagInfo[dropData.index]?tagInfo[dropData.index].key:-1" :is="tagInfo[dropData.index]?tagInfo[dropData.index].component:'null'">
         <div class="text">拖到此处以使用</div>
       </component>
@@ -278,6 +279,13 @@ function deleteNowCom() {
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
+    }
+    .name{
+      height: 30px;
+      line-height: 30px;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: bold;
     }
   }
 

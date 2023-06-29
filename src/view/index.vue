@@ -1,6 +1,6 @@
 <template>
   <div class="indexBack">
-    <div class="left">
+    <div :class="isOpen?'left':'leftSmall'">
       <div class="top">
 
         <el-popconfirm title="将去往商城页面" icon-color="#4e4e4e" @confirm="jump()" confirm-button-text="好的" cancel-button-text="不用了">
@@ -8,7 +8,7 @@
             <span >
           dom<br>me
         </span>
-          </template>  
+          </template>
         </el-popconfirm>
       </div>
       <div class="menuList">
@@ -17,6 +17,9 @@
     </div>
     <div class="right">
       <div class="top">
+        <div class="toLeft">
+          <span class="toLeftBtn" :class="isOpen?'close':'open'" :title="isOpen?'收起':'展开'" @click="changeLeft()">{{ isOpen?'&#9664;':'&#9654;' }}</span>
+        </div>
         <headTop></headTop>
       </div>
       <div class="content-all">
@@ -43,10 +46,16 @@ export default {
 import menuList from "../components/menu.vue"
 import headTop from "../components/nav.vue"
 import { useRouter } from 'vue-router';
+import {ref} from "vue";
 
 const router = useRouter();
 function jump(){
   router.push('/shop');
+}
+
+const isOpen = ref(true);
+function changeLeft(){
+  isOpen.value = !isOpen.value
 }
 </script>
 
@@ -61,9 +70,23 @@ function jump(){
   width: 100%;
   display: flex;
 
-  .left {
+  .leftSmall{
+    width: 100px;
+    animation: 0.5s animi2;
+  }
+  .left{
     width: 200px;
-    //border-right: 1px solid #4e4e4e;
+    animation: 0.5s animi;
+  }
+  @keyframes animi{
+    0%{width: 100px}
+    100%{width: 200px}
+  }
+  @keyframes animi2{
+    0%{width: 200px}
+    100%{width: 100px}
+  }
+  .left,.leftSmall {
     display: flex;
     height: 100%;
     flex-direction: column;
@@ -75,6 +98,8 @@ function jump(){
       display: flex;
       align-items: center;
       border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      border-right: 1px solid rgba(0, 0, 0, 0.3);
+      box-sizing: border-box;
       span{
         user-select: none;
       text-align: right;
@@ -104,8 +129,44 @@ function jump(){
     .top {
       height: 60px;
       width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      display: flex;
+      .toLeft{
+        width: 60px;
+        //border-right: 1px solid rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .toLeftBtn{
+          user-select: none;
+          background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
+          -webkit-background-clip: text;
+          color: transparent;
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          font-size: 30px;
+          display: inline-block;
+        }
+        .close{
+          animation: 0.5s changes;
+        }
+        .open{
+          animation: 0.5s changes1;
+        }
+        @keyframes changes{
+          0%{font-size: 0px;height: 0px;}
+          50%{font-size: 25px;height: 25px;}
+          100%{font-size: 30px;height: 30px;}
+        }
+        @keyframes changes1{
+          0%{font-size: 0px;height: 0px;}
+          50%{font-size: 25px;height: 25px;}
+          100%{font-size: 30px;height: 30px;}
+        }
+      }
     }
-
     .content-all {
       width: calc(100% - 40px);
       flex: 1;

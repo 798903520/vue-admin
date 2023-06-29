@@ -35,6 +35,7 @@ const chineseNum = ref([
   '玖'
 ]);
 function submitIt(data) {
+  console.log('data',data)
   // 获取截取的字符串数组
   let strArray = string_to_strArray(data, 4);
   // 存放转换完成后的文字数组
@@ -60,6 +61,9 @@ function submitIt(data) {
     // 最后一位是零 清理掉
     if (lastdata.lastIndexOf('零') == lastdata.length - 1) {
       lastdata = lastdata.slice(0, lastdata.length - 1);
+    }
+    if (lastdata.lastIndexOf('零') == 0) {
+      lastdata.slice(0, 1);
     }
     // 当前字符串全零则跳过大单位 (万)
     if (lastdata.length != 0) {

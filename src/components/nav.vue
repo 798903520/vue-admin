@@ -37,12 +37,13 @@ onMounted(() => {
 <style scoped lang="less">
 .nav1{
   height: 100%;
-  width: calc(100% - 20px);
+  //width: calc(100% - 20px);
+  flex: 1;
   display: flex;
   justify-content: right;
   align-items: center;
   padding-right: 20px;
-  border-bottom: 1px solid rgba(0,0,0,0.3);
+  //border-bottom: 1px solid rgba(0,0,0,0.3);
   img{
     height: 50px;
     width: 50px;

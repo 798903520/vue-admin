@@ -43,9 +43,9 @@ onMounted(() => {
 
 let cursor = {};
 
-// 点击面板获取位置xinxi 
+// 点击面板获取位置xinxi
 function getWhere() {
-  cursor = window.getSelection(); 
+  cursor = window.getSelection();
 }
 
 
@@ -144,7 +144,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .typeBase {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 30px);
   display: flex;
 
   .leftWord,
@@ -177,13 +177,20 @@ onMounted(() => {
 
     .clickBtn {
       display: inline-block;
-      background-color: blanchedalmond;
-      padding: 10px 30px;
+      transition: background-color 0.5s;
+      background-color: #04a2db;
+      padding: 8px 18px;
       border-radius: 4px;
-      color: #4e4e4e;
+      color: white;
       cursor: pointer;
       margin-right: 10px;
       user-select: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .clickBtn:hover{
+      transition: background-color 0.5s;
+      background-color: #00b0f0;
     }
 
     .console {

@@ -45,7 +45,7 @@ const router = route.matched[0].children;
 <style scoped lang="less">
 .menu1{
   height: 100%;
-  width: calc(100% - 1px);
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
 }
