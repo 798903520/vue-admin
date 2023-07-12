@@ -26,7 +26,7 @@
 <script setup>
 
 import {onMounted, ref} from "vue";
-import {Rectangle} from '../../js/drawBoard.js'
+import {Rectangle} from '../../js/drawBoard02.js'
 
 
 //拖拽的图形
@@ -52,7 +52,7 @@ function addInArr(e){
   console.log('type.value',type.value)
   switch (type.value) {
     case 'Rectangle':
-      drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
+      drawArr.value.unshift(new Rectangle('drawBoard',e.offsetX,e.offsetY));
       break;
     // case 'Rectangle':
     //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
@@ -129,7 +129,7 @@ function clickBoard(e) {
   //未点击到块直接退出
   if(idx == -1){
     drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
-    setBtn();
+    drawArr.value[0]?drawArr.value[0].setBtn():'';
     draw();
     return
   }
@@ -142,66 +142,9 @@ function clickBoard(e) {
   draw();
 
 //  根据数据给锚点定位
-  lineBtnPosition();
+  drawArr.value[0].lineBtnPosition();
 }
 
-/**
-  * 设置按钮位置  初始位置画布外,隐藏
-  */
-function setBtn(data = {
-  top:{
-    x:-10,
-    y:-10
-  },
-  right:{
-    x:-10,
-    y:-10
-  },
-  bottom:{
-    x:-10,
-    y:-10
-  },
-  left:{
-    x:-10,
-    y:-10
-  }
-}) {
-  let dom = document.getElementsByClassName('board')[0];
-  dom.style.setProperty('--topLine-top',data.top.y+'px')
-  dom.style.setProperty('--topLine-left',data.top.x+'px')
-
-  dom.style.setProperty('--rightLine-top',data.right.y+'px')
-  dom.style.setProperty('--rightLine-left',data.right.x+'px')
-
-  dom.style.setProperty('--bottomLine-top',data.bottom.y+'px')
-  dom.style.setProperty('--bottomLine-left',data.bottom.x+'px')
-
-  dom.style.setProperty('--leftLine-top',data.left.y+'px')
-  dom.style.setProperty('--leftLine-left',data.left.x+'px')
-}
-
-function lineBtnPosition(){
-  let data = {
-    top:{
-      x:drawArr.value[0].x -4,
-      y:drawArr.value[0].y-parseInt(drawArr.value[0].height/2)-4
-    },
-    right:{
-      x:drawArr.value[0].x+parseInt(drawArr.value[0].width/2) -4,
-      y:drawArr.value[0].y-4
-    },
-    bottom:{
-      x:drawArr.value[0].x -4,
-      y:drawArr.value[0].y+parseInt(drawArr.value[0].height/2)-4
-    },
-    left:{
-      x:drawArr.value[0].x - parseInt(drawArr.value[0].width/2) -4,
-      y:drawArr.value[0].y-4
-    }
-  }
-
-  setBtn(data)
-}
 
 
 /**
@@ -243,7 +186,7 @@ function moveStop(e){
       break;
   }
   draw();
-  lineBtnPosition();
+  drawArr.value[0].lineBtnPosition();
   moveDomId = null;
   positionArr = {};
 }

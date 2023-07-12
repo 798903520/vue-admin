@@ -2,11 +2,13 @@ class Rectangle {
     // 定位
     x=null
     y=null
-    width=null
-    height=null
-    ctx=null
+    width=null //宽
+    height=null //高
+    ctx=null //画笔
     strokeColor='black'
     fillColor='white'
+    domName=null //需要添加的dom id
+    selected=null//选中状态
     constructor(ctx,x=100,y=100,width=100,height=100) {
         this.ctx = ctx;
         this.x = x;
