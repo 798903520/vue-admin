@@ -285,11 +285,15 @@ function  changeBackground(type = false){
 
   draw();
 }
+
+function createTimestamp () {
+  return parseInt(new Date().getTime() / 1000) + '';
+};
 /**
   * 保存为png
   */
 function exportCanvasAsPNG(id) {
-  let fileName = 'mypint.png';
+  let fileName = `point_${createTimestamp()}.png`;
   let canvasElement = document.getElementById(id);
   let MIME_TYPE = "image/png";
   let imgURL = canvasElement.toDataURL(MIME_TYPE);
@@ -409,8 +413,9 @@ function exportCanvasData(){
     height: 100%;
     .el-tabs__content{
       padding: 10px;
-      height: 100%;
+      height: calc(100% - 10px);
       margin: 0;
+      overflow-y: auto;
     }
     .el-tabs__header{
       margin: 0;
