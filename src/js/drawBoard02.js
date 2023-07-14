@@ -6,7 +6,8 @@ class Rectangle {
     height=null //高
     ctx=null //画笔
     strokeColor='black'
-    fillColor='white'
+    name=null
+    fillColor='rgba(255,255,255,0)'
     domName=null //需要添加的dom id
     selected=null//选中状态
     constructor(domName,x=100,y=100,width=100,height=100) {
@@ -81,6 +82,7 @@ class Rectangle {
     }
 
     draw(){
+        this.ctx = document.getElementById(this.domName).getContext('2d');
         this.ctx.strokeStyle = this.strokeColor;
         this.ctx.fillStyle = this.fillColor;
         this.ctx.beginPath();
@@ -90,6 +92,8 @@ class Rectangle {
         this.ctx.closePath();
     }
     clean(){
+        this.ctx = document.getElementById(this.domName).getContext('2d');
+        this.ctx.clearRect(0,0,this.ctx.width,this.ctx.height);
         this.ctx.fillStyle = 'rgba(255,255,255,1)'
         this.ctx.fillRect(this.x-parseInt(this.width/2),this.y-parseInt(this.height/2),this.width,this.height);
     }

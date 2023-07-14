@@ -8,7 +8,25 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="画笔">画笔</el-tab-pane>
-      <el-tab-pane label="图层">图层</el-tab-pane>
+      <el-tab-pane label="图层">
+        <div class="itemType3" @click="selectToTop(item,index)" :class="{'selected':item.selected}" v-for="(item,index) in drawArr" :key="index">
+          <span class="name">{{item.name}}</span>
+          <span class="close" @click="">&times;</span>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="操作">
+        <div class="itemType3">
+          <span>透明</span>
+          <el-switch size="small" v-model="whiteBackground" @change="changeBackground()"></el-switch>
+          <input v-model="backgroundColor" @change="changeBackground(true)" type="color">
+        </div>
+        <div class="itemType3" @click="exportCanvasAsPNG('drawBoard')">
+          保存PNG
+        </div>
+        <div class="itemType3" @click="exportCanvasData()">
+          导出数据
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
   <div class="board" @mouseup="moveStop($event)">
@@ -44,6 +62,10 @@ const typeList = ref([
   * 实例数组
   */
 const drawArr = ref([]);
+//是否透明背景
+const whiteBackground = ref(false);
+//背景颜色
+const backgroundColor = ref('#ffffff');
 
 /**
   * 根据类型添加数据
@@ -53,6 +75,7 @@ function addInArr(e){
   switch (type.value) {
     case 'Rectangle':
       drawArr.value.unshift(new Rectangle('drawBoard',e.offsetX,e.offsetY));
+      drawArr.value[0].name = '矩形'+drawArr.value.length;
       break;
     // case 'Rectangle':
     //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
@@ -108,8 +131,13 @@ function clearTime(){
 
 
 function draw() {
-  ctx.value.fillStyle = 'rgba(255,255,255,1)';
-  ctx.value.fillRect(0,0,800,600)
+  ctx.value.clearRect(0,0,800,600);
+  if(whiteBackground.value){
+    let style = '';
+    style= backgroundColor.value;
+    ctx.value.fillStyle = style;
+    ctx.value.fillRect(0,0,800,600)
+  }
   for(let i=drawArr.value.length-1;i>=0;i--){
     drawArr.value[i].clean();
     drawArr.value[i].draw();
@@ -119,30 +147,44 @@ function draw() {
 //点击位置时对比数据
 function clickBoard(e) {
   let idx = drawArr.value.findIndex((item) => {
-
     return item.x-parseInt(item.width/2)<e.offsetX &&
     e.offsetX < (item.x-parseInt(item.width/2)+item.width) &&
     item.y-parseInt(item.height/2)<e.offsetY &&
     e.offsetY < (item.y-parseInt(item.height/2)+item.height)
-
   });
-  //未点击到块直接退出
-  if(idx == -1){
-    drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
-    drawArr.value[0]?drawArr.value[0].setBtn():'';
+
+  if(drawArr.value.length == 0){return}
+  // 如果选中 终止后面点击操作的判断
+  if(drawArr.value[0].selected){
+    drawArr.value[0].x = e.offsetX;
+    drawArr.value[0].y = e.offsetY;
+    drawArr.value[0].strokeColor = 'black'
+    drawArr.value[0].setBtn();
     draw();
+    drawArr.value[0].selected = null;
     return
   }
 
-  //符合条件的第一个块置顶并且框变蓝色
-  let clickData = drawArr.value.splice(idx,1);
-  drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
-  clickData[0].strokeColor = 'rgb(76,130,232)';
-  drawArr.value.unshift(clickData[0]);
-  draw();
+  //未点击到块直接退出
+  if(idx == -1){
+    drawArr.value[0].strokeColor = 'black';
+    drawArr.value[0].setBtn();
+    drawArr.value[0].selected = null;
+    draw();
+    return
+  }else{
+    //符合条件的第一个块置顶并且框变蓝色
+    let clickData = drawArr.value.splice(idx,1);
+    drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
+    clickData[0].strokeColor = 'rgb(76,130,232)';
+    drawArr.value.unshift(clickData[0]);
+    draw();
 
-//  根据数据给锚点定位
-  drawArr.value[0].lineBtnPosition();
+    //  根据数据给锚点定位
+    drawArr.value[0].lineBtnPosition();
+    drawArr.value[0].selected = true;
+  }
+
 }
 
 
@@ -153,7 +195,6 @@ function clickBoard(e) {
 let moveDomId = null;
 let positionArr = {};
 function mouseIsDown(e,id){
-  // console.log('mouseIsDown',e)
   positionArr.x=e.pageX;
   positionArr.y=e.pageY;
   moveDomId = id;
@@ -164,8 +205,6 @@ function mouseIsUp(e,id){
 }
 
 function moveStop(e){
-  // moveDom?moveDom.onmousemove=()=>{}:'';
-  console.log('e',positionArr.y,e.pageY)
   if(!moveDomId){return}
   switch (moveDomId){
     case 'topBlock':
@@ -185,8 +224,11 @@ function moveStop(e){
       drawArr.value[0].width -= (e.pageX-positionArr.x);
       break;
   }
+  drawArr.value[0].strokeColor = 'black';
+  drawArr.value[0].setBtn();
   draw();
-  drawArr.value[0].lineBtnPosition();
+  drawArr.value[0].selected = null;
+  // drawArr.value[0].lineBtnPosition();
   moveDomId = null;
   positionArr = {};
 }
@@ -208,6 +250,67 @@ function getDragType (t){
   type.value = t;
 }
 
+/**
+  * 选择置顶
+  */
+function selectToTop(data,idx){
+  if(idx == 0){
+    drawArr.value[0].strokeColor = 'black';
+    drawArr.value[0].selected = null;
+    draw();
+    drawArr.value[0].setBtn();
+    return;
+  }
+
+  drawArr.value.forEach(item => {
+    item.selected  = null;
+  })
+  let clickData = drawArr.value.splice(idx,1);
+  drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
+  clickData[0].strokeColor = 'rgb(76,130,232)';
+  drawArr.value.unshift(clickData[0]);
+  draw();
+
+  //  根据数据给锚点定位
+  drawArr.value[0].lineBtnPosition();
+  drawArr.value[0].selected = true;
+}
+
+
+/**
+  * 切换背景
+  */
+function  changeBackground(type = false){
+  type?whiteBackground.value=true:"";
+
+  draw();
+}
+/**
+  * 保存为png
+  */
+function exportCanvasAsPNG(id) {
+  let fileName = 'mypint.png';
+  let canvasElement = document.getElementById(id);
+  let MIME_TYPE = "image/png";
+  let imgURL = canvasElement.toDataURL(MIME_TYPE);
+  let dlLink = document.createElement('a');
+  dlLink.download = fileName;
+  dlLink.href = imgURL;
+  dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+
+  document.body.appendChild(dlLink);
+  dlLink.click();
+  document.body.removeChild(dlLink);
+}
+/**
+  * 保存数据
+  */
+function exportCanvasData(){
+
+}
+
+
+
 </script>
 
 <style scoped lang="less">
@@ -217,6 +320,9 @@ function getDragType (t){
   display: flex;
   .leftBar{
     width: 200px;
+
+    --el-switch-off-color:#04a0e9;
+    --el-switch-on-color:#4879bd;
     .itemType{
       font-size: 13px;
       color: #858585;
@@ -224,6 +330,31 @@ function getDragType (t){
       padding: 10px;
       border-radius: 2px;
       cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .itemType3{
+      font-size: 13px;
+      color: #858585;
+      border: 1px solid #cbcbcb;
+      padding: 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .close{
+        font-size: 20px;
+        display: block;
+        height: 15px;
+        width: 15px;
+        line-height: 15px;
+        padding: 2px;
+      }
+    }
+    .itemType3.selected{
+      border: 1px solid #3073da;
+      color: #3073da;
     }
   }
   .board{
@@ -231,6 +362,7 @@ function getDragType (t){
     border: 1px solid #dcdfe6;
     position: relative;
     overflow: hidden;
+    background-color: #eaeaea;
 
     --topLine-top:-10px;
     --topLine-left:-10px;
