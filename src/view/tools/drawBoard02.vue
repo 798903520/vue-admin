@@ -11,7 +11,7 @@
       <el-tab-pane label="图层">
         <div class="itemType3" @click="selectToTop(item,index)" :class="{'selected':item.selected}" v-for="(item,index) in drawArr" :key="index">
           <span class="name">{{item.name}}</span>
-          <span class="close" @click="">&times;</span>
+          <span class="close" @click.stop="deleteOne(index)">&times;</span>
         </div>
       </el-tab-pane>
       <el-tab-pane label="操作">
@@ -25,6 +25,9 @@
         </div>
         <div class="itemType3" @click="exportCanvasData()">
           导出数据
+        </div>
+        <div class="itemType3" @click="importCanvasData()">
+          导入数据
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -44,7 +47,11 @@
 <script setup>
 
 import {onMounted, ref} from "vue";
-import {Rectangle} from '../../js/drawBoard02.js'
+import {
+  Rectangle,//矩形
+  Circle,//原型
+  Tree,//树
+} from '../../js/drawBoard02.js'
 
 
 //拖拽的图形
@@ -54,7 +61,15 @@ const typeList = ref([
   {
     name:'矩形',
     key:'Rectangle'
-  }
+  },
+  {
+    name:'圆形',
+    key:'Circle'
+  },
+  {
+    name:'树',
+    key:'Tree'
+  },
 ]);
 
 
@@ -70,19 +85,38 @@ const backgroundColor = ref('#ffffff');
 /**
   * 根据类型添加数据
   */
-function addInArr(e){
+function addInArr(e,data = null){
   console.log('type.value',type.value)
+  let TXdata = null;
   switch (type.value) {
     case 'Rectangle':
-      drawArr.value.unshift(new Rectangle('drawBoard',e.offsetX,e.offsetY));
+      TXdata = data?data: {
+        x:e.offsetX,
+        y:e.offsetY,
+        width:100,
+        height:100,
+      };
+      drawArr.value.unshift(new Rectangle('drawBoard',TXdata));
       drawArr.value[0].name = '矩形'+drawArr.value.length;
       break;
-    // case 'Rectangle':
-    //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
-    //   break;
-    // case 'Rectangle':
-    //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
-    //   break;
+    case 'Circle':
+      TXdata = data?data: {
+        x:e.offsetX,
+        y:e.offsetY,
+        width:60,
+      };
+      drawArr.value.unshift(new Circle('drawBoard',TXdata));
+      drawArr.value[0].name = '圆形'+drawArr.value.length;
+      break;
+    case 'Tree':
+      TXdata =  {
+        x:e.offsetX,
+        y:e.offsetY,
+        width:10,
+      };
+      drawArr.value.unshift(new Tree('drawBoard',TXdata));
+      drawArr.value[0].name = '树'+drawArr.value.length;
+      break;
     // case 'Rectangle':
     //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
     //   break;
@@ -102,14 +136,12 @@ function getXY(e){
   if(timmer){
     clearTime();
     timmer = setTimeout(()=>{
-      // drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
       addInArr(e);
       draw();
       clearTime();
     },100);
   }else{
     timmer = setTimeout(()=>{
-      // drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
       addInArr(e);
       draw();
       clearTime();
@@ -118,7 +150,6 @@ function getXY(e){
 }
 function leaveCanvas(e){
   clearTime();
-  console.log('dragEnd',e)
 }
 
 /**
@@ -146,13 +177,11 @@ function draw() {
 
 //点击位置时对比数据
 function clickBoard(e) {
-  let idx = drawArr.value.findIndex((item) => {
-    return item.x-parseInt(item.width/2)<e.offsetX &&
-    e.offsetX < (item.x-parseInt(item.width/2)+item.width) &&
-    item.y-parseInt(item.height/2)<e.offsetY &&
-    e.offsetY < (item.y-parseInt(item.height/2)+item.height)
-  });
 
+  //调用本身的方法判断位置是否在内  findIndex判断最顶上一个后不再执行
+  let idx = drawArr.value.findIndex((item) => {
+    return item.isSelect(e);
+  });
   if(drawArr.value.length == 0){return}
   // 如果选中 终止后面点击操作的判断
   if(drawArr.value[0].selected){
@@ -190,7 +219,7 @@ function clickBoard(e) {
 
 
 /**
-  * 鼠标按事件
+  * 鼠标按小方块事件
   */
 let moveDomId = null;
 let positionArr = {};
@@ -199,31 +228,12 @@ function mouseIsDown(e,id){
   positionArr.y=e.pageY;
   moveDomId = id;
 }
-function mouseIsUp(e,id){
-  console.log('mouseIsUp',e)
-  // moveDom.onmousemove=()=>{};
-}
+
 
 function moveStop(e){
   if(!moveDomId){return}
-  switch (moveDomId){
-    case 'topBlock':
-        drawArr.value[0].y += (e.pageY-positionArr.y)/2;
-        drawArr.value[0].height -= (e.pageY-positionArr.y);
-      break;
-    case 'rightBlock':
-      drawArr.value[0].x += (e.pageX-positionArr.x)/2;
-      drawArr.value[0].width += (e.pageX-positionArr.x);
-      break;
-    case 'bottomBlock':
-      drawArr.value[0].y += (e.pageY-positionArr.y)/2;
-      drawArr.value[0].height += (e.pageY-positionArr.y);
-      break;
-    case 'leftBlock':
-      drawArr.value[0].x += (e.pageX-positionArr.x)/2;
-      drawArr.value[0].width -= (e.pageX-positionArr.x);
-      break;
-  }
+  //调用方法改变大小
+  drawArr.value[0].blockPosition(moveDomId,positionArr,e);
   drawArr.value[0].strokeColor = 'black';
   drawArr.value[0].setBtn();
   draw();
@@ -287,8 +297,8 @@ function  changeBackground(type = false){
 }
 
 function createTimestamp () {
-  return parseInt(new Date().getTime() / 1000) + '';
-};
+  return parseInt(new Date().getTime()) + '';
+}
 /**
   * 保存为png
   */
@@ -310,10 +320,62 @@ function exportCanvasAsPNG(id) {
   * 保存数据
   */
 function exportCanvasData(){
-
+  let JSONArr = JSON.stringify(drawArr.value);
+  let fileName = `JSON_${createTimestamp()}.json`;
+  const blob = new Blob([JSONArr], { type: 'application/json' });
+  // 创建一个链接，并设置其href属性为Blob的URL
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  // 设置链接的下载属性，以及下载时的文件名
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
+/**
+  * 导入数据
+  */
+function importCanvasData(){
+  let selectInput = document.createElement('input');
+  selectInput.setAttribute('type','file');
+  selectInput.onchange = ()=>{
+    let data = selectInput.files[0];
+    if(data && data.name.indexOf('.json') != -1){
+      const reader = new FileReader();
+      reader.readAsText(data);
+      reader.onload =() =>{
+        const fileData = JSON.parse(reader.result);
+        importDataAddArr(fileData);
+      }
+    }else{
+      console.log('请选择符合条件的json文件!')
+    }
+    document.body.removeChild(selectInput);
+  }
+  document.body.appendChild(selectInput);
+  selectInput.click();
+}
 
+/**
+  * 数据导入完成后,生成数组
+  */
+function importDataAddArr(data){
+  for(let item of data){
+    type.value = item.type;
+    addInArr(null,item);
+  }
+  draw();
+}
+
+/**
+  * 删除一个图形
+  */
+function deleteOne(index){
+  drawArr.value.splice(index,1);
+  draw();
+  drawArr.value[0].setBtn();
+}
 
 </script>
 
