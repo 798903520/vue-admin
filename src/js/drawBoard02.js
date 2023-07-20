@@ -284,9 +284,9 @@ class treeNode{
         if(this.children.length == 2){
             return
         }else{
-            if(this.width > 2){
+            if(this.width > 3){
                 let width = this.width -1;
-                let height = this.height - 10;
+                let height = this.height - 9;
                 //控制开合角度
                 let rote = Math.floor(Math.random()*35);
                 if(this.children.length == 1){
@@ -324,7 +324,8 @@ class Tree {
         this.y = this.ctx.canvas.height;
         this.width = data.width;
         this.height = 90;
-        this.createTreeNode();
+        //回显就不用重新生成枝桠数组
+        data.point?this.point = data.point:this.createTreeNode();
     }
 
     createTreeNode(){
@@ -425,7 +426,8 @@ class Tree {
     drawFor(obj){
         this.ctx.lineWidth = obj.width;
         this.ctx.stroke();
-        if(obj.width <4 ){
+        if(obj.width <=3 ){
+            this.ctx.moveTo(obj.x,obj.y);
             let wid = 0;
             obj.x%2==1?this.ctx.fillStyle = this.fillColor:this.ctx.fillStyle = 'white';
             obj.x%2==1?wid = 5:wid = 4;

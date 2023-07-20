@@ -9,17 +9,25 @@
       </el-tab-pane>
       <el-tab-pane label="画笔">画笔</el-tab-pane>
       <el-tab-pane label="图层">
-        <div class="itemType3" @click="selectToTop(item,index)" :class="{'selected':item.selected}" v-for="(item,index) in drawArr" :key="index">
+        <div class="itemType3" @click="selectToTop(item,index)" :class="{'selected':item.selected}" v-for="(item,index) in canvasList.drawArr" :key="index">
           <span class="name">{{item.name}}</span>
           <span class="close" @click.stop="deleteOne(index)">&times;</span>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="操作">
+      <el-tab-pane label="画布">
         <div class="itemType3">
           <span>透明</span>
-          <el-switch size="small" v-model="whiteBackground" @change="changeBackground()"></el-switch>
-          <input v-model="backgroundColor" @change="changeBackground(true)" type="color">
+          <el-switch size="small" v-model="canvasList.whiteBackground" @change="changeBackground()"></el-switch>
+          <input v-model="canvasList.backgroundColor" @change="changeBackground(true)" type="color">
         </div>
+        <div class="itemTypeInput">
+          <span>长</span>
+          <input type="text" v-model.lazy="canvasList.height" />
+          <span>宽</span>
+          <input type="text" v-model.lazy="canvasList.width" />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="操作">
         <div class="itemType3" @click="exportCanvasAsPNG('drawBoard')">
           保存PNG
         </div>
@@ -39,7 +47,7 @@
     <div :draggable="false" id="leftBlock" class="leftLine lineBtn" @mousedown="mouseIsDown($event,'leftBlock')" ></div>
     <canvas @dragleave="leaveCanvas($event)" @click="clickBoard($event)"
             @dragover="getXY($event)" ondragover="event.preventDefault()"
-            id="drawBoard" width="800" height="600"></canvas>
+            id="drawBoard" :width="canvasList.width" :height="canvasList.height"></canvas>
   </div>
 </div>
 </template>
@@ -73,14 +81,27 @@ const typeList = ref([
 ]);
 
 
+//画布
+const canvasList = ref({
+  width:'800',
+  height:'600',
+  drawArr:[],//实例数组
+  whiteBackground:false,//是否透明色
+  backgroundColor:'#ffffff',//背景颜色
+  // timmer :null,//用于节流
+  // moveDomId:null,//鼠标方块标志
+  // positionArr:{},//鼠标方块位置
+  ctx:{}//画笔
+})
+
 /**
   * 实例数组
   */
-const drawArr = ref([]);
+// const drawArr = ref([]);
 //是否透明背景
-const whiteBackground = ref(false);
+// const whiteBackground = ref(false);
 //背景颜色
-const backgroundColor = ref('#ffffff');
+// const backgroundColor = ref('#ffffff');
 
 /**
   * 根据类型添加数据
@@ -96,8 +117,8 @@ function addInArr(e,data = null){
         width:100,
         height:100,
       };
-      drawArr.value.unshift(new Rectangle('drawBoard',TXdata));
-      drawArr.value[0].name = '矩形'+drawArr.value.length;
+      canvasList.value.drawArr.unshift(new Rectangle('drawBoard',TXdata));
+      canvasList.value.drawArr[0].name = '矩形'+canvasList.value.drawArr.length;
       break;
     case 'Circle':
       TXdata = data?data: {
@@ -105,26 +126,26 @@ function addInArr(e,data = null){
         y:e.offsetY,
         width:60,
       };
-      drawArr.value.unshift(new Circle('drawBoard',TXdata));
-      drawArr.value[0].name = '圆形'+drawArr.value.length;
+      canvasList.value.drawArr.unshift(new Circle('drawBoard',TXdata));
+      canvasList.value.drawArr[0].name = '圆形'+canvasList.value.drawArr.length;
       break;
     case 'Tree':
-      TXdata =  {
+      TXdata = data?data: {
         x:e.offsetX,
         y:e.offsetY,
         width:10,
       };
-      drawArr.value.unshift(new Tree('drawBoard',TXdata));
-      drawArr.value[0].name = '树'+drawArr.value.length;
+      canvasList.value.drawArr.unshift(new Tree('drawBoard',TXdata));
+      canvasList.value.drawArr[0].name = '树'+canvasList.value.drawArr.length;
       break;
     // case 'Rectangle':
-    //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
+    //   canvasList.value.drawArr.unshift(new Rectangle(canvasList.value.ctx,e.offsetX,e.offsetY));
     //   break;
     // case 'Rectangle':
-    //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
+    //   canvasList.value.drawArr.unshift(new Rectangle(canvasList.value.ctx,e.offsetX,e.offsetY));
     //   break;
     // case 'Rectangle':
-    //   drawArr.value.unshift(new Rectangle(ctx.value,e.offsetX,e.offsetY));
+    //   canvasList.value.drawArr.unshift(new Rectangle(canvasList.value.ctx,e.offsetX,e.offsetY));
     //   break;
   }
 }
@@ -162,16 +183,16 @@ function clearTime(){
 
 
 function draw() {
-  ctx.value.clearRect(0,0,800,600);
-  if(whiteBackground.value){
+  canvasList.value.ctx.clearRect(0,0,canvasList.value.width,canvasList.value.height);
+  if(canvasList.value.whiteBackground){
     let style = '';
-    style= backgroundColor.value;
-    ctx.value.fillStyle = style;
-    ctx.value.fillRect(0,0,800,600)
+    style= canvasList.value.backgroundColor;
+    canvasList.value.ctx.fillStyle = style;
+    canvasList.value.ctx.fillRect(0,0,canvasList.value.width,canvasList.value.height)
   }
-  for(let i=drawArr.value.length-1;i>=0;i--){
-    drawArr.value[i].clean();
-    drawArr.value[i].draw();
+  for(let i=canvasList.value.drawArr.length-1;i>=0;i--){
+    canvasList.value.drawArr[i].clean();
+    canvasList.value.drawArr[i].draw();
   }
 }
 
@@ -179,39 +200,39 @@ function draw() {
 function clickBoard(e) {
 
   //调用本身的方法判断位置是否在内  findIndex判断最顶上一个后不再执行
-  let idx = drawArr.value.findIndex((item) => {
+  let idx = canvasList.value.drawArr.findIndex((item) => {
     return item.isSelect(e);
   });
-  if(drawArr.value.length == 0){return}
+  if(canvasList.value.drawArr.length == 0){return}
   // 如果选中 终止后面点击操作的判断
-  if(drawArr.value[0].selected){
-    drawArr.value[0].x = e.offsetX;
-    drawArr.value[0].y = e.offsetY;
-    drawArr.value[0].strokeColor = 'black'
-    drawArr.value[0].setBtn();
+  if(canvasList.value.drawArr[0].selected){
+    canvasList.value.drawArr[0].x = e.offsetX;
+    canvasList.value.drawArr[0].y = e.offsetY;
+    canvasList.value.drawArr[0].strokeColor = 'black'
+    canvasList.value.drawArr[0].setBtn();
     draw();
-    drawArr.value[0].selected = null;
+    canvasList.value.drawArr[0].selected = null;
     return
   }
 
   //未点击到块直接退出
   if(idx == -1){
-    drawArr.value[0].strokeColor = 'black';
-    drawArr.value[0].setBtn();
-    drawArr.value[0].selected = null;
+    canvasList.value.drawArr[0].strokeColor = 'black';
+    canvasList.value.drawArr[0].setBtn();
+    canvasList.value.drawArr[0].selected = null;
     draw();
     return
   }else{
     //符合条件的第一个块置顶并且框变蓝色
-    let clickData = drawArr.value.splice(idx,1);
-    drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
+    let clickData = canvasList.value.drawArr.splice(idx,1);
+    canvasList.value.drawArr[0]?canvasList.value.drawArr[0].strokeColor = 'black':'';
     clickData[0].strokeColor = 'rgb(76,130,232)';
-    drawArr.value.unshift(clickData[0]);
+    canvasList.value.drawArr.unshift(clickData[0]);
     draw();
 
     //  根据数据给锚点定位
-    drawArr.value[0].lineBtnPosition();
-    drawArr.value[0].selected = true;
+    canvasList.value.drawArr[0].lineBtnPosition();
+    canvasList.value.drawArr[0].selected = true;
   }
 
 }
@@ -233,12 +254,12 @@ function mouseIsDown(e,id){
 function moveStop(e){
   if(!moveDomId){return}
   //调用方法改变大小
-  drawArr.value[0].blockPosition(moveDomId,positionArr,e);
-  drawArr.value[0].strokeColor = 'black';
-  drawArr.value[0].setBtn();
+  canvasList.value.drawArr[0].blockPosition(moveDomId,positionArr,e);
+  canvasList.value.drawArr[0].strokeColor = 'black';
+  canvasList.value.drawArr[0].setBtn();
   draw();
-  drawArr.value[0].selected = null;
-  // drawArr.value[0].lineBtnPosition();
+  canvasList.value.drawArr[0].selected = null;
+  // canvasList.value.drawArr[0].lineBtnPosition();
   moveDomId = null;
   positionArr = {};
 }
@@ -247,7 +268,7 @@ function moveStop(e){
 const ctx = ref({});
 onMounted(()=>{
   let canvas = document.getElementById('drawBoard');
-  ctx.value = canvas.getContext('2d');
+  canvasList.value.ctx = canvas.getContext('2d');
 });
 
 
@@ -265,25 +286,25 @@ function getDragType (t){
   */
 function selectToTop(data,idx){
   if(idx == 0){
-    drawArr.value[0].strokeColor = 'black';
-    drawArr.value[0].selected = null;
+    canvasList.value.drawArr[0].strokeColor = 'black';
+    canvasList.value.drawArr[0].selected = null;
     draw();
-    drawArr.value[0].setBtn();
+    canvasList.value.drawArr[0].setBtn();
     return;
   }
 
-  drawArr.value.forEach(item => {
+  canvasList.value.drawArr.forEach(item => {
     item.selected  = null;
   })
-  let clickData = drawArr.value.splice(idx,1);
-  drawArr.value[0]?drawArr.value[0].strokeColor = 'black':'';
+  let clickData = canvasList.value.drawArr.splice(idx,1);
+  canvasList.value.drawArr[0]?canvasList.value.drawArr[0].strokeColor = 'black':'';
   clickData[0].strokeColor = 'rgb(76,130,232)';
-  drawArr.value.unshift(clickData[0]);
+  canvasList.value.drawArr.unshift(clickData[0]);
   draw();
 
   //  根据数据给锚点定位
-  drawArr.value[0].lineBtnPosition();
-  drawArr.value[0].selected = true;
+  canvasList.value.drawArr[0].lineBtnPosition();
+  canvasList.value.drawArr[0].selected = true;
 }
 
 
@@ -291,7 +312,7 @@ function selectToTop(data,idx){
   * 切换背景
   */
 function  changeBackground(type = false){
-  type?whiteBackground.value=true:"";
+  type?canvasList.value.whiteBackground=true:"";
 
   draw();
 }
@@ -319,8 +340,21 @@ function exportCanvasAsPNG(id) {
 /**
   * 保存数据
   */
+function exportCanvasData1(){
+  let JSONArr = JSON.stringify(canvasList.value.drawArr);
+  let fileName = `JSON_${createTimestamp()}.json`;
+  const blob = new Blob([JSONArr], { type: 'application/json' });
+  // 创建一个链接，并设置其href属性为Blob的URL
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  // 设置链接的下载属性，以及下载时的文件名
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 function exportCanvasData(){
-  let JSONArr = JSON.stringify(drawArr.value);
+  let JSONArr = JSON.stringify(canvasList.value);
   let fileName = `JSON_${createTimestamp()}.json`;
   const blob = new Blob([JSONArr], { type: 'application/json' });
   // 创建一个链接，并设置其href属性为Blob的URL
@@ -336,7 +370,7 @@ function exportCanvasData(){
 /**
   * 导入数据
   */
-function importCanvasData(){
+function importCanvasData1(){
   let selectInput = document.createElement('input');
   selectInput.setAttribute('type','file');
   selectInput.onchange = ()=>{
@@ -356,11 +390,34 @@ function importCanvasData(){
   document.body.appendChild(selectInput);
   selectInput.click();
 }
+function importCanvasData(){
+  let selectInput = document.createElement('input');
+  selectInput.setAttribute('type','file');
+  selectInput.onchange = ()=>{
+    let data = selectInput.files[0];
+    if(data && data.name.indexOf('.json') != -1){
+      const reader = new FileReader();
+      reader.readAsText(data);
+      reader.onload =() =>{
+        const fileData = JSON.parse(reader.result);
+        canvasList.value = fileData;
+        canvasList.value.ctx = document.getElementById('drawBoard').getContext('2d');
+        importDataAddArr(fileData.drawArr);
+      }
+    }else{
+      console.log('请选择符合条件的json文件!')
+    }
+    document.body.removeChild(selectInput);
+  }
+  document.body.appendChild(selectInput);
+  selectInput.click();
+}
 
 /**
   * 数据导入完成后,生成数组
   */
 function importDataAddArr(data){
+  canvasList.value.drawArr = [];
   for(let item of data){
     type.value = item.type;
     addInArr(null,item);
@@ -372,9 +429,9 @@ function importDataAddArr(data){
   * 删除一个图形
   */
 function deleteOne(index){
-  drawArr.value.splice(index,1);
+  canvasList.value.drawArr.splice(index,1);
   draw();
-  drawArr.value[0].setBtn();
+  canvasList.value.drawArr[0].setBtn();
 }
 
 </script>
@@ -422,12 +479,34 @@ function deleteOne(index){
       border: 1px solid #3073da;
       color: #3073da;
     }
+
+    .itemTypeInput{
+      font-size: 13px;
+      color: #858585;
+      border: 1px solid #cbcbcb;
+      padding: 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      span{
+        margin: 5px 0;
+      }
+      input:focus-visible{
+        padding: 1px 2px;
+        outline-width: 1px;
+        outline-color: #008d9d;
+      }
+    }
   }
   .board{
     flex:1;
+    width: 0;
+    height: 100%;
     border: 1px solid #dcdfe6;
     position: relative;
-    overflow: hidden;
+    overflow: auto;
     background-color: #eaeaea;
 
     --topLine-top:-10px;
