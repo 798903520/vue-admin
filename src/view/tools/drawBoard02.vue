@@ -9,6 +9,7 @@
       </el-tab-pane>
       <el-tab-pane label="画笔">画笔</el-tab-pane>
       <el-tab-pane label="图层">
+        <span v-if="canvasList.drawArr.length == 0">暂无图层</span>
         <div class="itemType3" @click="selectToTop(item,index)" :class="{'selected':item.selected}" v-for="(item,index) in canvasList.drawArr" :key="index">
           <span class="name">{{item.name}}</span>
           <span class="close" @click.stop="deleteOne(index)">&times;</span>
@@ -22,9 +23,9 @@
         </div>
         <div class="itemTypeInput">
           <span>长</span>
-          <input type="text" v-model.lazy="canvasList.height" />
+          <input type="text" v-model.lazy="canvasList.height" @change="changeWH()" />
           <span>宽</span>
-          <input type="text" v-model.lazy="canvasList.width" />
+          <input type="text" v-model.lazy="canvasList.width" @change="changeWH()" />
         </div>
       </el-tab-pane>
       <el-tab-pane label="操作">
@@ -434,6 +435,14 @@ function deleteOne(index){
   canvasList.value.drawArr[0].setBtn();
 }
 
+/**
+  * 修改长宽
+  */
+function changeWH (){
+  // console.log('123')
+  draw()
+}
+
 </script>
 
 <style scoped lang="less">
@@ -493,12 +502,26 @@ function deleteOne(index){
       span{
         margin: 5px 0;
       }
+      input{
+        padding:5px;
+      }
       input:focus-visible{
-        padding: 1px 2px;
-        outline-width: 1px;
-        outline-color: #008d9d;
+        padding:6px;
+        //outline-width: 1px;
+        //outline-color: #008d9d;
+        border: 1px solid #008d9d;
+        border-radius: 2px;
+        outline:unset;
       }
     }
+  }
+  .board::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    border: 1px solid #c3c3c3;
+  }
+  .board::-webkit-scrollbar-thumb {
+    background-color: #c3c3c3;
   }
   .board{
     flex:1;
@@ -547,10 +570,10 @@ function deleteOne(index){
     }
   }
 
-  ::v-deep .el-tabs__item.is-left{
+  :deep(.el-tabs__item.is-left){
     padding: 0 5px;
   }
-  ::v-deep .el-tabs{
+  :deep(.el-tabs){
     height: 100%;
     .el-tabs__content{
       padding: 10px;
@@ -564,6 +587,6 @@ function deleteOne(index){
   }
 }
 #drawBoard{
-  border: 1px dashed #04a2db;
+  border: 2px dashed #04a2db;
 }
 </style>

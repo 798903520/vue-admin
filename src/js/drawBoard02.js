@@ -113,6 +113,7 @@ class Rectangle {
         this.ctx = document.getElementById(this.domName).getContext('2d');
         this.ctx.strokeStyle = this.strokeColor;
         this.ctx.fillStyle = this.fillColor;
+        this.ctx.lineWidth = 1;
         this.ctx.beginPath();
         this.ctx.rect(this.x-parseInt(this.width/2),this.y-parseInt(this.height/2),this.width,this.height);
         this.ctx.fill()
@@ -246,6 +247,7 @@ class Circle {
         this.ctx = document.getElementById(this.domName).getContext('2d');
         this.ctx.strokeStyle = this.strokeColor;
         this.ctx.fillStyle = this.fillColor;
+        this.ctx.lineWidth = 1;
         this.ctx.beginPath();
         this.ctx.arc(this.x,this.y,this.width,(Math.PI / 180) * 0, (Math.PI / 180) * 360, false);
         this.ctx.fill()
@@ -356,43 +358,43 @@ class Tree {
             y:-10
         }
     }) {
-        // let dom = document.getElementsByClassName('board')[0];
-        // dom.style.setProperty('--topLine-top',data.top.y+'px')
-        // dom.style.setProperty('--topLine-left',data.top.x+'px')
-        //
-        // dom.style.setProperty('--rightLine-top',data.right.y+'px')
-        // dom.style.setProperty('--rightLine-left',data.right.x+'px')
-        //
-        // dom.style.setProperty('--bottomLine-top',data.bottom.y+'px')
-        // dom.style.setProperty('--bottomLine-left',data.bottom.x+'px')
-        //
-        // dom.style.setProperty('--leftLine-top',data.left.y+'px')
-        // dom.style.setProperty('--leftLine-left',data.left.x+'px')
+        let dom = document.getElementsByClassName('board')[0];
+        dom.style.setProperty('--topLine-top',data.top.y+'px')
+        dom.style.setProperty('--topLine-left',data.top.x+'px')
+
+        dom.style.setProperty('--rightLine-top',data.right.y+'px')
+        dom.style.setProperty('--rightLine-left',data.right.x+'px')
+
+        dom.style.setProperty('--bottomLine-top',data.bottom.y+'px')
+        dom.style.setProperty('--bottomLine-left',data.bottom.x+'px')
+
+        dom.style.setProperty('--leftLine-top',data.left.y+'px')
+        dom.style.setProperty('--leftLine-left',data.left.x+'px')
     }
 
     //小块位置
-    // lineBtnPosition(){
-    //     let data = {
-    //         top:{
-    //             x:-10,
-    //             y:-10
-    //         },
-    //         right:{
-    //             x:this.x+parseInt(this.width) -4,
-    //             y:this.y-4
-    //         },
-    //         bottom:{
-    //             x:-10,
-    //             y:-10
-    //         },
-    //         left:{
-    //             x:-10,
-    //             y:-10
-    //         }
-    //     }
-    //
-    //     this.setBtn(data)
-    // }
+    lineBtnPosition(){
+        let data = {
+            top:{
+                x:-10,
+                y:-10
+            },
+            right:{
+                x:-10,
+                y:-10
+            },
+            bottom:{
+                x:-10,
+                y:-10
+            },
+            left:{
+                x:-10,
+                y:-10
+            }
+        }
+
+        this.setBtn(data)
+    }
 
     //是否选中
     isSelect(e){
