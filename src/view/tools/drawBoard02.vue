@@ -1,7 +1,7 @@
 <template>
 <div class="drawPage">
   <div class="leftBar">
-    <el-tabs tab-position="left" type="border-card" >
+    <el-tabs tab-position="left" @tab-change="getIndex" type="border-card" >
       <el-tab-pane label="图形">
         <div class="itemType" v-for="item in typeList" :key="item.key" @dragstart="getDragType(item.key)" draggable="true">
           {{item.name}}
@@ -46,7 +46,8 @@
     <div :draggable="false" id="rightBlock" class="rightLine lineBtn" @mousedown="mouseIsDown($event,'rightBlock')"></div>
     <div :draggable="false" id="bottomBlock" class="bottomLine lineBtn" @mousedown="mouseIsDown($event,'bottomBlock')"></div>
     <div :draggable="false" id="leftBlock" class="leftLine lineBtn" @mousedown="mouseIsDown($event,'leftBlock')" ></div>
-    <canvas @dragleave="leaveCanvas($event)" @click="clickBoard($event)"
+    <canvas @dragleave="leaveCanvas($event)" @mousedown="paintStart($event)"
+            @mouseup="paintEnd($event)" @click="clickBoard($event)"
             @dragover="getXY($event)" ondragover="event.preventDefault()"
             id="drawBoard" :width="canvasList.width" :height="canvasList.height"></canvas>
   </div>
@@ -59,7 +60,8 @@ import {onMounted, ref} from "vue";
 import {
   Rectangle,//矩形
   Circle,//原型
-  Tree,//树
+  Tree,
+  Paint,//树
 } from '../../js/drawBoard02.js'
 
 
@@ -87,6 +89,7 @@ const canvasList = ref({
   width:'800',
   height:'600',
   drawArr:[],//实例数组
+  isPaint:false,//是否是画板
   whiteBackground:false,//是否透明色
   backgroundColor:'#ffffff',//背景颜色
   // timmer :null,//用于节流
@@ -119,7 +122,7 @@ function addInArr(e,data = null){
         height:100,
       };
       canvasList.value.drawArr.unshift(new Rectangle('drawBoard',TXdata));
-      canvasList.value.drawArr[0].name = '矩形'+canvasList.value.drawArr.length;
+      canvasList.value.drawArr[0].name = '矩形'+canvasList.value.drawArr.filter(item => {return item.type=='Rectangle'}).length;
       break;
     case 'Circle':
       TXdata = data?data: {
@@ -128,7 +131,7 @@ function addInArr(e,data = null){
         width:60,
       };
       canvasList.value.drawArr.unshift(new Circle('drawBoard',TXdata));
-      canvasList.value.drawArr[0].name = '圆形'+canvasList.value.drawArr.length;
+      canvasList.value.drawArr[0].name = '圆形'+canvasList.value.drawArr.filter(item => {return item.type=='Circle'}).length;
       break;
     case 'Tree':
       TXdata = data?data: {
@@ -137,11 +140,13 @@ function addInArr(e,data = null){
         width:10,
       };
       canvasList.value.drawArr.unshift(new Tree('drawBoard',TXdata));
-      canvasList.value.drawArr[0].name = '树'+canvasList.value.drawArr.length;
+      canvasList.value.drawArr[0].name = '树'+canvasList.value.drawArr.filter(item => {return item.type=='Tree'}).length;
       break;
-    // case 'Rectangle':
-    //   canvasList.value.drawArr.unshift(new Rectangle(canvasList.value.ctx,e.offsetX,e.offsetY));
-    //   break;
+    case 'Paint':
+      TXdata = data?data: {};
+      canvasList.value.drawArr.unshift(new Paint('drawBoard',TXdata));
+      canvasList.value.drawArr[0].name = '绘画'+canvasList.value.drawArr.filter(item => {return item.type=='Paint'}).length;
+      break;
     // case 'Rectangle':
     //   canvasList.value.drawArr.unshift(new Rectangle(canvasList.value.ctx,e.offsetX,e.offsetY));
     //   break;
@@ -199,7 +204,14 @@ function draw() {
 
 //点击位置时对比数据
 function clickBoard(e) {
+  if(canvasList.value.isPaint){
+    return;
+  }else{
+    tuxing(e)
+  }
+}
 
+function tuxing(e){
   //调用本身的方法判断位置是否在内  findIndex判断最顶上一个后不再执行
   let idx = canvasList.value.drawArr.findIndex((item) => {
     return item.isSelect(e);
@@ -209,7 +221,7 @@ function clickBoard(e) {
   if(canvasList.value.drawArr[0].selected){
     canvasList.value.drawArr[0].x = e.offsetX;
     canvasList.value.drawArr[0].y = e.offsetY;
-    canvasList.value.drawArr[0].strokeColor = 'black'
+    // canvasList.value.drawArr[0].strokeColor = 'black'
     canvasList.value.drawArr[0].setBtn();
     draw();
     canvasList.value.drawArr[0].selected = null;
@@ -218,7 +230,7 @@ function clickBoard(e) {
 
   //未点击到块直接退出
   if(idx == -1){
-    canvasList.value.drawArr[0].strokeColor = 'black';
+    // canvasList.value.drawArr[0].strokeColor = 'black';
     canvasList.value.drawArr[0].setBtn();
     canvasList.value.drawArr[0].selected = null;
     draw();
@@ -226,8 +238,8 @@ function clickBoard(e) {
   }else{
     //符合条件的第一个块置顶并且框变蓝色
     let clickData = canvasList.value.drawArr.splice(idx,1);
-    canvasList.value.drawArr[0]?canvasList.value.drawArr[0].strokeColor = 'black':'';
-    clickData[0].strokeColor = 'rgb(76,130,232)';
+    // canvasList.value.drawArr[0]?canvasList.value.drawArr[0].strokeColor = 'black':'';
+    // clickData[0].strokeColor = 'rgb(76,130,232)';
     canvasList.value.drawArr.unshift(clickData[0]);
     draw();
 
@@ -256,7 +268,7 @@ function moveStop(e){
   if(!moveDomId){return}
   //调用方法改变大小
   canvasList.value.drawArr[0].blockPosition(moveDomId,positionArr,e);
-  canvasList.value.drawArr[0].strokeColor = 'black';
+  // canvasList.value.drawArr[0].strokeColor = 'black';
   canvasList.value.drawArr[0].setBtn();
   draw();
   canvasList.value.drawArr[0].selected = null;
@@ -287,10 +299,10 @@ function getDragType (t){
   */
 function selectToTop(data,idx){
   if(idx == 0){
-    canvasList.value.drawArr[0].strokeColor = 'black';
-    canvasList.value.drawArr[0].selected = null;
+    // canvasList.value.drawArr[0].strokeColor = 'black';
+    canvasList.value.drawArr[0].selected = (canvasList.value.drawArr[0].selected)?null:true;
     draw();
-    canvasList.value.drawArr[0].setBtn();
+    canvasList.value.drawArr[0].selected?canvasList.value.drawArr[0].lineBtnPosition():canvasList.value.drawArr[0].setBtn();
     return;
   }
 
@@ -298,8 +310,8 @@ function selectToTop(data,idx){
     item.selected  = null;
   })
   let clickData = canvasList.value.drawArr.splice(idx,1);
-  canvasList.value.drawArr[0]?canvasList.value.drawArr[0].strokeColor = 'black':'';
-  clickData[0].strokeColor = 'rgb(76,130,232)';
+  // canvasList.value.drawArr[0]?canvasList.value.drawArr[0].strokeColor = 'black':'';
+  // clickData[0].strokeColor = 'rgb(76,130,232)';
   canvasList.value.drawArr.unshift(clickData[0]);
   draw();
 
@@ -441,6 +453,67 @@ function deleteOne(index){
 function changeWH (){
   // console.log('123')
   draw()
+}
+
+
+
+
+//获取当前tab
+function getIndex(data) {
+  if(data == 1){
+    //存在画图图层就置顶,不存在创建
+    let paint = canvasList.value.drawArr.findIndex((item) => {
+      return item.type == 'Paint'
+    });
+    if(paint == -1){
+      type.value = "Paint";
+      addInArr(null,null);
+    }else {
+      let clickData = canvasList.value.drawArr.splice(paint,1);
+      canvasList.value.drawArr.unshift(clickData[0]);
+    }
+  }
+  //只有在画笔页面才能绘制图形  清除选中状态
+  canvasList.value.isPaint = data == 1?true:false;
+  // canvasList.value.drawArr.length >0?selectToTop("",0):'';
+}
+
+let paintdom = null;
+let line = [];
+//绘制开始
+function paintStart(e) {
+  if(canvasList.value.isPaint){
+  //  执行绘画
+    line.push({
+      x:e.offsetX,
+      y:e.offsetY
+    })
+    canvasList.value.drawArr[0].draw({x:e.offsetX, y:e.offsetY},false)
+    paintdom = document.getElementById('drawBoard');
+    paintdom.addEventListener('mousemove',paintMove,false)
+  }else{
+    return;
+  }
+}
+function paintMove(e){
+  line.push({
+    x:e.offsetX,
+    y:e.offsetY
+  });
+  canvasList.value.drawArr[0].draw({x:e.offsetX,y:e.offsetY});
+}
+//绘制结束
+function paintEnd(e) {
+  if(canvasList.value.isPaint){
+    //  绘画结束
+    canvasList.value.drawArr[0].draw(null,true);
+    canvasList.value.drawArr[0].point.push(line);
+    line = [];
+    paintdom.removeEventListener('mousemove',paintMove,false);
+    paintdom = null;
+  }else{
+    return;
+  }
 }
 
 </script>

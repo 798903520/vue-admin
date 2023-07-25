@@ -1,3 +1,4 @@
+//矩形
 class Rectangle {
     // 定位
     x=null
@@ -128,6 +129,7 @@ class Rectangle {
     }
 }
 
+//圆形
 class Circle {
     // 定位
     x=null
@@ -265,7 +267,7 @@ class Circle {
 
 
 
-
+//树数据结构
 class treeNode{
     x=null
     y=null
@@ -305,10 +307,11 @@ class treeNode{
         }
     }
 }
+//树状
 class Tree {
     // 定位
-    x=null
-    y=null
+    _x=null
+    _y=null
     type='Tree'
     width=null //宽
     height=null //高
@@ -322,8 +325,8 @@ class Tree {
     constructor(domName,data) {
         this.domName = domName;
         this.ctx = document.getElementById(domName).getContext('2d');
-        this.x = this.ctx.canvas.width/2;
-        this.y = this.ctx.canvas.height;
+        this._x = this.ctx.canvas.width/2;
+        this._y = this.ctx.canvas.height;
         this.width = data.width;
         this.height = 90;
         //回显就不用重新生成枝桠数组
@@ -331,7 +334,7 @@ class Tree {
     }
 
     createTreeNode(){
-        this.point = new treeNode(this.x,this.y - this.height,this.width,this.height,90);
+        this.point = new treeNode(this._x,this._y - this.height,this.width,this.height,90);
     }
 
     // createdFourBlock(){
@@ -428,6 +431,7 @@ class Tree {
     drawFor(obj){
         this.ctx.lineWidth = obj.width;
         this.ctx.stroke();
+        this.ctx.closePath();
         if(obj.width <=3 ){
             this.ctx.moveTo(obj.x,obj.y);
             let wid = 0;
@@ -454,7 +458,7 @@ class Tree {
         this.ctx.strokeStyle = this.strokeColor;
         this.ctx.fillStyle = this.fillColor;
         this.ctx.beginPath();
-        this.ctx.moveTo(this.x,this.y);
+        this.ctx.moveTo(this._x,this._y);
         this.ctx.lineTo(this.point.x,this.point.y);
         this.drawFor(this.point);
     }
@@ -467,5 +471,130 @@ class Tree {
     }
 }
 
+//绘画
+class Paint {
+    // 定位
+    type='Paint'
+    ctx=null //画笔
+    strokeColor='white'
+    name=null
+    point=[]//节点
+    fillColor='rgb(255,0,0)'
+    domName=null //需要添加的dom id
+    oneList=[]
 
-export {Rectangle,Circle,Tree}
+    width=2//画笔粗细
+    selected=null//选中状态
+    constructor(domName,data) {
+        this.domName = domName;
+        this.ctx = document.getElementById(domName).getContext('2d');
+        //回显就不用
+        data.point?this.point = data.point:this.point = [];
+    }
+
+    setBtn(data = {
+        top:{
+            x:-10,
+            y:-10
+        },
+        right:{
+            x:-10,
+            y:-10
+        },
+        bottom:{
+            x:-10,
+            y:-10
+        },
+        left:{
+            x:-10,
+            y:-10
+        }
+    }) {
+        let dom = document.getElementsByClassName('board')[0];
+        dom.style.setProperty('--topLine-top',data.top.y+'px')
+        dom.style.setProperty('--topLine-left',data.top.x+'px')
+
+        dom.style.setProperty('--rightLine-top',data.right.y+'px')
+        dom.style.setProperty('--rightLine-left',data.right.x+'px')
+
+        dom.style.setProperty('--bottomLine-top',data.bottom.y+'px')
+        dom.style.setProperty('--bottomLine-left',data.bottom.x+'px')
+
+        dom.style.setProperty('--leftLine-top',data.left.y+'px')
+        dom.style.setProperty('--leftLine-left',data.left.x+'px')
+    }
+
+    //小块位置
+    lineBtnPosition(){
+        let data = {
+            top:{
+                x:-10,
+                y:-10
+            },
+            right:{
+                x:-10,
+                y:-10
+            },
+            bottom:{
+                x:-10,
+                y:-10
+            },
+            left:{
+                x:-10,
+                y:-10
+            }
+        }
+
+        this.setBtn(data)
+    }
+
+    //是否选中
+    isSelect(e){
+
+        // let data = (this.x - e.offsetX)*(this.x - e.offsetX)+(this.y - e.offsetY)*(this.y - e.offsetY);
+        //         // let dd =  parseInt(Math.sqrt(data)) <= this.width;
+        //         // return dd;
+        return this.selected
+    }
+    //循环
+    drawFor(obj){
+        for(let ite of obj){
+            this.ctx.moveTo(ite[0].x,ite[0].y);
+            for(let item of ite){
+                this.draw(item)
+            }
+        }
+    }
+    //绘制
+    draw(p=null,isEnd=null){
+        this.ctx = document.getElementById(this.domName).getContext('2d');
+        this.ctx.strokeStyle = this.strokeColor;
+        this.ctx.lineWidth=this.width;
+        this.ctx.fillStyle = this.fillColor;
+        if(isEnd){
+            return
+        }else if(isEnd == false){
+            this.ctx.beginPath();
+            this.ctx.moveTo(p.x,p.y);
+            return
+        }
+        if(p == null){
+            this.ctx.beginPath();
+            this.drawFor(this.point);
+        }else{
+            console.log('move',p)
+            this.ctx.lineTo(p.x,p.y);
+            this.ctx.stroke();
+        }
+    }
+    //清理
+    clean(){
+        this.ctx = document.getElementById(this.domName).getContext('2d');
+        this.ctx.clearRect(0,0,this.ctx.width,this.ctx.height);
+        this.ctx.fillStyle = 'rgba(255,255,255,0)';
+        // this.drawFor(this.point);
+    }
+}
+
+
+export {Rectangle,Circle,Tree,Paint}
