@@ -85,6 +85,15 @@ const router = createRouter({
                             },
                             component: () => import('../view/game/tetris.vue'),
                         },
+                        {
+                            path:'/game/maze',
+                            name:'迷宫',
+                            meta: {
+                                title: '迷宫',
+                                Permission:'root'
+                            },
+                            component: () => import('../view/game/maze.vue'),
+                        },
                     ]
                 },
                 {
