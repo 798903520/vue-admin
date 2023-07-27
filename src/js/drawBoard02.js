@@ -476,7 +476,7 @@ class Paint {
     // 定位
     type='Paint'
     ctx=null //画笔
-    strokeColor='white'
+    strokeColor='#ffffff'
     name=null
     point=[]//节点
     fillColor='rgb(255,0,0)'
@@ -561,8 +561,10 @@ class Paint {
         for(let ite of obj){
             this.ctx.moveTo(ite[0].x,ite[0].y);
             for(let item of ite){
-                this.draw(item)
+                // this.draw(item)
+                this.ctx.lineTo(item.x,item.y);
             }
+            this.ctx.stroke();
         }
     }
     //绘制
@@ -582,7 +584,6 @@ class Paint {
             this.ctx.beginPath();
             this.drawFor(this.point);
         }else{
-            console.log('move',p)
             this.ctx.lineTo(p.x,p.y);
             this.ctx.stroke();
         }

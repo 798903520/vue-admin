@@ -7,7 +7,20 @@
           {{item.name}}
         </div>
       </el-tab-pane>
-      <el-tab-pane label="画笔">画笔</el-tab-pane>
+      <el-tab-pane label="画笔">
+        <div v-if="canvasList.isPaint?true:false" class="itemType3">
+          <span>颜色</span>
+          <input v-model="canvasList.drawArr[0].strokeColor" @change="" type="color">
+        </div>
+        <div v-if="canvasList.isPaint?true:false" class="itemType3">
+          <span>粗细</span>
+          <div class="lineType" :class="{'is_select':canvasList.drawArr[0].width == item}"
+               @click="canvasList.drawArr[0].width = item"
+               :title="`宽度${item}像素`" v-for="(item,index) in lineTypeList" :key="item">
+            <span :style="{width:item+'px'}" :class="'line_'+index"></span>
+          </div>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="图层">
         <span v-if="canvasList.drawArr.length == 0">暂无图层</span>
         <div class="itemType3" @click="selectToTop(item,index)" :class="{'selected':item.selected}" v-for="(item,index) in canvasList.drawArr" :key="index">
@@ -98,14 +111,8 @@ const canvasList = ref({
   ctx:{}//画笔
 })
 
-/**
-  * 实例数组
-  */
-// const drawArr = ref([]);
-//是否透明背景
-// const whiteBackground = ref(false);
-//背景颜色
-// const backgroundColor = ref('#ffffff');
+//lineType 画笔粗细
+const lineTypeList=[1,2,4,6];
 
 /**
   * 根据类型添加数据
@@ -461,12 +468,12 @@ function changeWH (){
 //获取当前tab
 function getIndex(data) {
   if(data == 1){
+    type.value = "Paint";
     //存在画图图层就置顶,不存在创建
     let paint = canvasList.value.drawArr.findIndex((item) => {
       return item.type == 'Paint'
     });
     if(paint == -1){
-      type.value = "Paint";
       addInArr(null,null);
     }else {
       let clickData = canvasList.value.drawArr.splice(paint,1);
@@ -586,6 +593,21 @@ function paintEnd(e) {
         border-radius: 2px;
         outline:unset;
       }
+    }
+    .lineType{
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+      height: 16px;
+      width: 16px;
+      span{
+        margin: 0 auto;
+        display: block;
+        height: 100%;
+        background-color: black;
+      }
+    }
+    .is_select{
+      border: 1px solid #4c82e8;
     }
   }
   .board::-webkit-scrollbar {
