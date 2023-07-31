@@ -1,7 +1,7 @@
 import {utils} from "./utils";
 
 class Maze {
-    constructor(dom_name) {
+    constructor(dom_name,width) {
         let dom = document.getElementById(dom_name);
         this.dom_name = dom_name;
         this.dom_height = dom.height;
@@ -10,7 +10,7 @@ class Maze {
         //行走的点
         this.throght_p = {x:0,y:1};
 
-        this.item_width = 20;
+        this.item_width = width;
 
         this.empty_block_list = [];
 
