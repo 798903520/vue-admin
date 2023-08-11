@@ -70,13 +70,13 @@ export default {
   .boll01 {
     height: 25vh;
     width: 25vh;
-    background-color: #e92fef;
+    background-color: #cc99cc;
     border-radius: 13vh;
     position: absolute;
     top: 55%;
     left: 40%;
     box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.1);
-    animation: move1 4s ease-in-out alternate infinite;
+    animation: move1 3s ease-in-out alternate infinite;
     animation-delay: 1s;
   }
 
@@ -93,13 +93,13 @@ export default {
   .boll02 {
     height: 20vh;
     width: 20vh;
-    background-color: #03d5b6;
+    background-color: #ffffcc;
     border-radius: 10vh;
     position: absolute;
     top: 35%;
     left: 35%;
     box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.1);
-    animation: move2 4s ease-in-out alternate infinite;
+    animation: move2 3s ease-in-out alternate infinite;
     animation-delay: 2s;
   }
   @keyframes move2 {
@@ -115,22 +115,22 @@ export default {
   .boll03 {
     height: 22vh;
     width: 22vh;
-    background-color: #ff9c98;
+    background-color: #cccc99;
     border-radius: 11vh;
     position: absolute;
-    top: 30%;
+    top: 28%;
     left: 50%;
     box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.1);
-    animation: move3 4s ease-in-out alternate infinite;
+    animation: move3 3s ease-in-out alternate infinite;
     animation-delay: 3s;
   }
   @keyframes move3 {
     0% {
-      top: 30%
+      top: 28%
     }
 
     100% {
-      top: 25%
+      top: 24%
     }
   }
 
@@ -145,7 +145,8 @@ export default {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 
     .background {
       width: 100%;
@@ -154,7 +155,7 @@ export default {
       top: 0;
       left: 0;
       z-index: 0;
-      border-radius: 20px;
+      border-radius: 10px;
       backdrop-filter: blur(10px);
       animation: background1 1s;
     }
