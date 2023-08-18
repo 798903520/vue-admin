@@ -1,10 +1,43 @@
 <template>
-  <div>
-
+  <div class="pageA">
+    <div class="canvas_div">
+      <canvas id="onePeople" ></canvas>
+    </div>
+    <div class="rightPanel"></div>
   </div>
 </template>
 
 <script setup>
+import {HangOut} from "../../js/hangOut";
+
+import {onMounted, ref} from "vue";
+
+
+
+let mapData = {};
+//初始化高度
+const canvasSize = ref({w:0,h:0});
+
+function getWH(){
+  let dom = document.getElementsByClassName('canvas_div')[0];
+  let domCanvas = document.getElementById('onePeople');
+  canvasSize.value.w = dom.offsetWidth;
+  canvasSize.value.h = dom.offsetHeight;
+  domCanvas.width = dom.offsetWidth;
+  domCanvas.height = dom.offsetHeight;
+
+  // const ctx = domCanvas.getContext('2d');
+  // ctx.translate(dom.offsetWidth/2, dom.offsetHeight/2)
+  // ctx.fillStyle = 'blue'
+  // ctx.arc(0, 0,10,(Math.PI / 180) * 0, (Math.PI / 180) * 360, false);
+  // ctx.fill();
+}
+onMounted(()=>{
+  getWH();
+  mapData = new HangOut('onePeople');
+  console.log('mapData',mapData.map_arr)
+})
+
 const ada = `
 public final class ImprovedNoise {
    static public double noise(double x, double y, double z) {
@@ -57,6 +90,21 @@ public final class ImprovedNoise {
 `
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="less" scoped>
+  .pageA{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    .rightPanel{
+      width: 25%;
+      height: 100%;
+    }
+    .canvas_div{
+      flex: 1;
+      height: 100%;
+      #onePeople{
+        border: 1px solid black;
+      }
+    }
+  }
 </style>

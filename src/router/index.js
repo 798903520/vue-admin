@@ -94,6 +94,15 @@ const router = createRouter({
                             },
                             component: () => import('../view/game/maze.vue'),
                         },
+                        {
+                            path:'/game/polin',
+                            name:'柏林',
+                            meta: {
+                                title: '柏林',
+                                Permission:'root'
+                            },
+                            component: () => import('../view/game/polin.vue'),
+                        },
                     ]
                 },
                 {
