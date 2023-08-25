@@ -50,7 +50,7 @@ import {ref} from "vue";
 
 const router = useRouter();
 function jump(){
-  router.push('/shop');
+  router.push('/shopIndex');
 }
 
 const isOpen = ref(true);

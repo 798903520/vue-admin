@@ -1,10 +1,12 @@
 <template>
   <div class="image">
-    <div class="select" v-if="blobFile">
-      <span class="elx" @click="clearData">x</span>
-      <img :src="baseUrl + blobFile" alt="">
-    </div>
-    <div class="select" v-if="!blobFile">
+    <template v-for="(item,index) in blobFile.split(',')">
+      <div class="select" v-if="item.length > 0" >
+        <span class="elx" @click="clearData(index)">x</span>
+        <img :src="baseUrl + item" alt="">
+      </div>
+    </template>
+    <div class="select">
       <el-button size="small" @click="selectImg">选择图片</el-button>
       <span class="span"><img
           src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iI2QzZDNkMyIgY2xhc3M9ImJpIGJpLXBsdXMtY2lyY2xlIiB2aWV3Qm94PSIwIDAgMTYgMTYiIGlkPSJpY29uLXBsdXMtY2lyY2xlLTI5Ij48cGF0aCBkPSJNOCAxNUE3IDcgMCAxIDEgOCAxYTcgNyAwIDAgMSAwIDE0em0wIDFBOCA4IDAgMSAwIDggMGE4IDggMCAwIDAgMCAxNnoiPjwvcGF0aD48cGF0aCBkPSJNOCA0YS41LjUgMCAwIDEgLjUuNXYzaDNhLjUuNSAwIDAgMSAwIDFoLTN2M2EuNS41IDAgMCAxLTEgMHYtM2gtM2EuNS41IDAgMCAxIDAtMWgzdi0zQS41LjUgMCAwIDEgOCA0eiI+PC9wYXRoPjwvc3ZnPg=="
@@ -25,8 +27,7 @@ let emits = defineEmits(['imgPath']);
 // 选择的图片
 let baseUrl = import.meta.env.VITE_APP_BASE_API;
 let blobFile = ref('');
-blobFile.value = props.imgPath;
-console.log('props.imgPath',props);
+blobFile.value = props.imgPath?props.imgPath:'';
 function selectImg() {
   let input = document.createElement('input');
   input.setAttribute('type', 'file');
@@ -38,7 +39,9 @@ function selectImg() {
       formData.append('blobFile', res);
       http.post('/upload/uploadImg', formData).then(res => {
         if (res.code == 200) {
-          blobFile.value = res.data;
+          let data = blobFile.value.split(',');
+          data[0].length>0?data.push(res.data):data[0]=res.data;
+          blobFile.value = getStr(data);
           emits('imgPath',blobFile.value);
         } else {
           ElNotification({
@@ -55,8 +58,22 @@ function selectImg() {
   input.click();
 };
 
-function clearData(){
-  blobFile.value = '';
+function getStr(arr){
+  let str = '';
+  arr.map((item,index) => {
+    if(index == 0){
+      str+=item;
+    }else{
+      str+=(","+item);
+    }
+  });
+  return str;
+}
+
+function clearData(index){
+  let data = blobFile.value.split(',');
+  data.splice(index,1);
+  blobFile.value = getStr(data);
   emits('imgPath',blobFile.value);
 }
 </script>
@@ -65,10 +82,11 @@ function clearData(){
 .image {
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .select {
-  margin-right: 10px;
+  margin: 0 8px 8px 0;
   height: 100px;
   width: 100px;
   border: 1px dashed #d3d3d3;

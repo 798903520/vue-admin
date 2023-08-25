@@ -1,5 +1,15 @@
 <template>
-  <div id="webgl"></div>
+  <div class="detail_content">
+    <div class="top">
+      <img src="" alt="" class="left_icon">
+      <a href="">{{}}</a>
+    </div>
+    <div class="name"></div>
+    <div id="webgl">
+    </div>
+  </div>
+
+
 </template>
 
 
@@ -119,7 +129,7 @@ function getGoodsData() {
   http.get('/table/get_p_Data?product_id=' + goods_id).then(res => {
     if (res.code == 200) {
       goodsData.value = res.data;
-      draw();
+      // draw();
     } else {
       console.log('error: ', res.msg);
     }
@@ -127,4 +137,13 @@ function getGoodsData() {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.detail_content{
+  width: 1200px;
+  height: auto;
+  border-radius: 20px;
+  background-color: white;
+  padding: 20px;
+  margin: 20px auto;
+}
+</style>

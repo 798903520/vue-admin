@@ -1,24 +1,115 @@
 <template>
-  <div class="shop_bg">
-    <div class="header">
-      <div class="head_content">
-        <div class="left_btn">
-          <span @click="jumpLog()">{{ userName }}</span>
-          <span>免费注册</span>
-          <span>手机逛网站</span>
+    <!-- 搜索 -->
+    <div class="search_div">
+      <div class="all_width all_width_1">
+
+        <el-popconfirm title="" icon-color="#4e4e4e" @confirm="jumpLog('index')" confirm-button-text="好的" cancel-button-text="不用了">
+          <template #reference>
+            <div class="logo" @click="">dom<br>me</div>
+          </template>
+        </el-popconfirm>
+
+        <div class="search_input">
+          <el-input v-model="searchKey" placeholder="搜你想搜">
+            <template #suffix>
+              <el-icon class="el-input__icon" @click="clickSearch()">
+                <img src="../../assets/img/icon.png" alt="">
+              </el-icon>
+            </template>
+          </el-input>
         </div>
-        <div class="right_btn">
-          <span>我的</span>
-          <span>购物车</span>
-          <span>收藏夹</span>
-          <span>商品分类</span>
-          <span>联系客服</span>
+        <div class="QRcode">
+          <img src="../../assets/img/qrcode.jpg" alt="">
         </div>
       </div>
     </div>
-
-    <router-view></router-view>
-  </div>
+    <!-- 内容 -->
+    <div class="index_content all_width">
+      <!-- 顶部内容 -->
+      <div class="contitle">
+        <div class="left_type">
+          <span class="leftTitle">分类</span>
+          <span class="goodsType" v-for="(item, idx) in typeData" :key="item.type">
+            <div class="children_type" v-for="(i, index) in item.children_type" v-if="idx < 8" :key="i"><span
+                v-if="index != 0"><strong>&nbsp;/&nbsp;</strong></span><a @click="jumpTypeGoods(i)">{{ i }}</a></div>
+          </span>
+        </div>
+        <div class="right_con">
+          <div class="content_title">
+            <template v-for="(item, index) in titleData" :key="index">
+              <a class="click_title"
+                 :class="{ 'font_size': index < 3, 'color_change': index < 2, 'color_change1': index == 2 }">{{ item }}</a>
+              <span class="line" v-if="index != titleData.length - 1"></span>
+            </template>
+          </div>
+          <div class="content_loop_mine">
+            <div class="left_loop">
+              <swiper :space-between="50" :modules="modules" :delay='1000' :autoplay="true" :navigation="false"
+                      :loop="true">
+                <swiper-slide><img src="../../assets/img/goods_1.jpg" alt=""></swiper-slide>
+                <swiper-slide><img src="../../assets/img/goods_2.png" alt=""></swiper-slide>
+                <swiper-slide><img src="../../assets/img/goods_3.jpg" alt=""></swiper-slide>
+              </swiper>
+            </div>
+            <div class="right_mine">
+              <div class="head">
+                <img :src="userImg" alt="">
+              </div>
+              <span class="name_hi">Hi!{{ userName == 'Hi,请登录' ? '你好' : userName }}</span>
+              <div class="btn" v-if="userName == 'Hi,请登录'">
+                <span @click="jumpLog()" class="btn_1">登录</span>
+                <span class="btn_2">注册</span>
+                <span class="btn_3">开店</span>
+              </div>
+              <div class="my_goods_list" v-else>
+                <div class="order_type" v-for="(item, index) in orderDataType" :key="index">
+                  <span class="num">{{ data_tuype[index] }}</span>
+                  <span class="type">{{ item }}</span>
+                </div>
+              </div>
+              <div class="user_do">
+                <div class="do_1">
+                  <img src="../../assets/img/icon_shou.png" alt="">
+                  <span>宝贝收藏</span>
+                </div>
+                <div class="do_2">
+                  <img src="../../assets/img/icon_buy.png" alt="">
+                  <span>买过的店</span>
+                </div>
+                <div class="do_3">
+                  <img src="../../assets/img/icon_bussys.png" alt="">
+                  <span>收藏的店</span>
+                </div>
+                <div class="do_4">
+                  <img src="../../assets/img/icon_look.png" alt="">
+                  <span>我的足迹</span>
+                </div>
+              </div>
+              <div class="notice">
+                <span>热点</span> <a>zhangczhangczhangczhangc</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gess_goods">
+        <div class="gess_title">
+          猜你喜欢
+          <span>个性推荐</span>
+        </div>
+        <div class="goods_items">
+          <div class="good_one" @click="jumpDetail(item.product_id)" v-for="item in yourLove" :key="item.product_id">
+            <img :src="baseUrl + item.imgPaths.split(',')[0]" alt="">
+            <div class="right_con">
+              <span class="goods_title">{{ item.name }}
+                <span class="tips"></span>
+              </span>
+              <span class="spice">¥ <span style="font-size: 25px;">{{ item.price.split(',')[0] }}</span> </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -46,8 +137,8 @@ const modules = ref([Navigation, Autoplay])
 let userName = ref("");
 let userImg = ref('');
 /**
-  * 获取用户名字
-  */
+ * 获取用户名字
+ */
 function getUserName() {
   let userData = JSON.parse(sessionStorage.getItem("userData"));
   userName.value = userData == null ? "Hi,请登录" : userData.userName;
@@ -58,8 +149,8 @@ onMounted(() => {
 });
 
 /**
-  * 跳转登录
-  */
+ * 跳转登录
+ */
 let { ctx: that } = getCurrentInstance();
 function jumpLog(type = null) {
   if (userName.value == 'Hi,请登录') {
@@ -87,8 +178,8 @@ function jumpLog(type = null) {
 
 let searchKey = ref('');
 /**
-  * 搜索框
-  */
+ * 搜索框
+ */
 function clickSearch() {
   console.log('123123123');
 }
@@ -96,8 +187,8 @@ function clickSearch() {
 
 let typeData = ref([]);
 /**
-  * 获取分类数据
-  */
+ * 获取分类数据
+ */
 function getTypeData() {
   let daa = {
     pageSize: 10,
@@ -124,41 +215,41 @@ onMounted(() => {
 });
 
 /**
-  * title数据
-  */
+ * title数据
+ */
 const titleData = ref([
   '地猫', '不划算', '地猫超市', '非法拍卖', '骑猪旅行', '偶尔特卖', '没有家', '好像直播'
 ]);
 
 /**
-  * 订单数据
-  */
+ * 订单数据
+ */
 const orderDataType = ref([
   '购物车', '待收货', '待发货', '待付款', '待评价'
 ]);
 /**
-  * 模拟获取的数据
-  */
+ * 模拟获取的数据
+ */
 const data_tuype = ref([
   23, 1, 0, 0, 3
 ]);
 
 
 /**
-  * 点击分类
-  */
+ * 点击分类
+ */
 function jumpTypeGoods(type) {
   console.log('type', type);
 }
 
 
 /**
-  * 轮播
-  */
+ * 轮播
+ */
 
 /**
-  * 获取推广数据
-  */
+ * 获取推广数据
+ */
 const yourLove = ref([]);
 onMounted(() => {
   getIndexList();
@@ -174,11 +265,11 @@ function getIndexList() {
 
 
 /**
-  * 打开新页面
-  */
- function jumpDetail(id){
-  window.open('/detail/'+id,'_blank');
- }
+ * 打开新页面
+ */
+function jumpDetail(id){
+  window.open('/shopIndex/detail/'+id,'_blank');
+}
 </script>
 
 <style lang="less" scoped>
@@ -575,9 +666,9 @@ function getIndexList() {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-.good_one:hover{
-  box-shadow: inset 0px 0px 1px 1px #89adff;
-}
+    .good_one:hover{
+      box-shadow: inset 0px 0px 1px 1px #89adff;
+    }
     .good_one {
       background-color: #f7f9fa;
       width: calc(32% - 22px);
@@ -605,8 +696,8 @@ function getIndexList() {
     }
     .good_one:hover .goods_title{
       background: linear-gradient(45deg, rgb(251, 0, 255), rgb(0, 187, 255));
-        -webkit-background-clip: text;
-        color: transparent;
+      -webkit-background-clip: text;
+      color: transparent;
     }
 
     .good_one:nth-child(3n) {

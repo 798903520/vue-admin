@@ -14,7 +14,7 @@ import {onMounted, ref} from "vue";
 
 
 
-let mapData = {};
+let mapData = ref({});
 //初始化高度
 const canvasSize = ref({w:0,h:0});
 
@@ -26,6 +26,15 @@ function getWH(){
   domCanvas.width = dom.offsetWidth;
   domCanvas.height = dom.offsetHeight;
 
+  let data = {
+    wh:{
+      w:canvasSize.value.w,
+      h:canvasSize.value.h
+    }
+  }
+
+  mapData.value = new HangOut('onePeople', data);
+
   // const ctx = domCanvas.getContext('2d');
   // ctx.translate(dom.offsetWidth/2, dom.offsetHeight/2)
   // ctx.fillStyle = 'blue'
@@ -34,8 +43,8 @@ function getWH(){
 }
 onMounted(()=>{
   getWH();
-  mapData = new HangOut('onePeople');
-  console.log('mapData',mapData.map_arr)
+
+  console.log('mapData',mapData.value)
 })
 
 const ada = `

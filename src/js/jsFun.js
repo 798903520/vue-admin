@@ -94,6 +94,20 @@ function string_to_strArray(str, length) {
     return strArray;
 }
 
+//返回指定长度数组
+function arr_to_strArray(str, length) {
+    let strArray = [];
+    let stare = str.length % length;
+    if (stare != 0) {
+        strArray.push(str.slice(0, stare));
+    }
+    for (let i = 0; i < (str.length - stare) / length; i++) {
+        let data = str.slice(stare + i * length, stare + (i + 1) * length);
+        strArray.push(data);
+    }
+    return strArray;
+}
+
 /**
   * 判断是否空
   */
@@ -119,4 +133,4 @@ function isEmpty(data) {
     }
 }
 
-export { render, getVNode, toBase64, string_to_strArray ,isEmpty}
+export { render, getVNode, toBase64, string_to_strArray ,isEmpty,arr_to_strArray}

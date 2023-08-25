@@ -7,7 +7,7 @@ const router = createRouter({
         {
             path:'/',
             name:'all',
-            redirect: '/shop',
+            redirect: '/shopIndex',
             component: () => import('../view/index.vue'),
             children:[
                 {
@@ -168,22 +168,34 @@ const router = createRouter({
             }
         },
         {
-            path: '/shop',
-            name:'shop',
+            path: '/shopIndex',
+            name:'shopIndex',
+            redirect: '/shopIndex/shopContent',
             component: () => import('../view/shop/shopIndex.vue'),
             meta: {
                 title: '商城',
                 Permission:'user,root,lang'
-            }
-        },
-        {
-            path: '/detail/:id',
-            name:'detail',
-            component: () => import('../view/shop/shopDetail.vue'),
-            meta: {
-                title: '商品详情',
-                Permission:'user,root,lang'
-            }
+            },
+            children:[
+                {
+                    path: '/shopIndex/shopContent',
+                    name:'shopContent',
+                    component: () => import('../view/shop/shopIndexContent.vue'),
+                    meta: {
+                        title: '商城',
+                        Permission:'user,root,lang'
+                    }
+                },
+                {
+                    path: '/shopIndex/detail/:id',
+                    name:'detail',
+                    component: () => import('../view/shop/shopDetail.vue'),
+                    meta: {
+                        title: '商品详情',
+                        Permission:'user,root,lang'
+                    }
+                },
+            ]
         },
         {
             path: '/404',
@@ -204,7 +216,7 @@ router.beforeEach((to, from,next) => {
         }else{
             next()
         }
-    }else if(to.path=='/shop'){
+    }else if(to.path=='/shopIndex'){
         next()
     }else{
         if(sessionStorage.getItem('MyToken')){

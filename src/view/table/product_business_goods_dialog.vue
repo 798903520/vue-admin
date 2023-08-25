@@ -22,7 +22,11 @@
         <el-table-column label="颜色" prop="color"></el-table-column>
         <el-table-column label="介绍" prop="content"></el-table-column>
         <el-table-column label="价格" prop="price"></el-table-column>
-        <el-table-column label="图片" prop="imgPaths"></el-table-column>
+        <el-table-column label="图片" prop="imgPaths">
+          <template #default="scope">
+            {{ scope.row.imgPaths.length == 0?'0':scope.row.imgPaths.split(',').length }}
+          </template>
+        </el-table-column>
         <el-table-column label="推广状态" prop="surplus">
           <template #default="scope">
             {{scope.row.surplus == 'false'?'未推广':'正在推广'}}
@@ -137,6 +141,8 @@ let editId = '';
 
 const addOne = ref(false);
 function new_goods() {
+  editId = '';
+  addData.value = {};
   addOne.value = true;
 }
 function editOne(id) {
