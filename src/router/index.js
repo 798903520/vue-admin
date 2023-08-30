@@ -216,7 +216,7 @@ router.beforeEach((to, from,next) => {
         }else{
             next()
         }
-    }else if(to.path=='/shopIndex'){
+    }else if(to.path=='/shopIndex/shopContent'){
         next()
     }else{
         if(sessionStorage.getItem('MyToken')){
