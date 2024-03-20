@@ -9,7 +9,7 @@
           <el-input v-model="query.name"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="getData(props.b_id.p_b_id)">搜索</el-button>
+          <el-button @click="getData(b_id.p_b_id)">搜索</el-button>
           <el-button @click="new_goods()">新增商品</el-button>
           <el-button @click="deleteMoreAndOne()">批量删除</el-button>
         </el-form-item>
@@ -129,6 +129,8 @@ watch(() => props.b_id, (newV, oldV) => {
   addData.value.p_b_id = newV.p_b_id;
   addData.value.type = newV.type;
   title.value = newV.name;
+
+  console.log('newV',addData.value)
 });
 
 const ctx = defineEmits(['close']);
@@ -142,7 +144,7 @@ let editId = '';
 const addOne = ref(false);
 function new_goods() {
   editId = '';
-  addData.value = {};
+  addData.value = {p_b_id:props.b_id.p_b_id};
   addOne.value = true;
 }
 function editOne(id) {
@@ -169,6 +171,7 @@ function closeOne(id) {
 // 新增he编辑
 function addOrEditOne() {
   if (editId.length == 0) {
+    addData.value['surplus'] = true;
     http.post('/table/add_P', addData.value).then(res => {
       if (res.code == 200) {
         addOne.value = false;

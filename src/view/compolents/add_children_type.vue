@@ -33,8 +33,7 @@ function add_to_children() {
     })
     return;
   }
-  props.fatherData == null ? props.fatherData = '' : '';
-  let arr = props.fatherData.split(',') || [];
+  let arr = props.fatherData?props.fatherData.split(',') : [];
   if (arr.includes(add_children.value)) {
     ElNotification({
       title: '提示',
@@ -43,7 +42,7 @@ function add_to_children() {
     })
     return;
   }
-  if (props.fatherData.length == 0) {
+  if (props.fatherData && props.fatherData.length == 0) {
     // 直接add_children传递给父组件
     emit('getSunData', add_children.value);
   } else {

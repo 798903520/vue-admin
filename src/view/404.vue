@@ -1,6 +1,6 @@
 <template>
   <div class="div_404">
-    404 &nbsp;not&nbsp; found &nbsp;!
+    <span>404&nbsp;not&nbsp;found&nbsp;!</span>
   </div>
 </template>
 
@@ -10,16 +10,16 @@ export default {
 
   data() {
     return {
-      
+
     };
   },
 
   mounted() {
-    
+
   },
 
   methods: {
-    
+
   },
 };
 </script>
@@ -33,7 +33,13 @@ export default {
   height: 100%;
   font-size: 10vw;
   font-weight: bold;
-  letter-spacing: -1.3vw;
+  //letter-spacing: -1vw;
+  filter: contrast(100);
+  color: white;
+  background-color: black;
+  span{
+    filter: blur(8px);
+  }
 }
 
 </style>
